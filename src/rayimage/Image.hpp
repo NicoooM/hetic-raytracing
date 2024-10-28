@@ -16,8 +16,8 @@ public:
   Image(unsigned int w, unsigned int h, Color c);
   ~ Image();
 
-  void SetPixel(unsigned int x, unsigned int y, Color color);
-  Color GetPixel(unsigned int x, unsigned int y);
+  void set_pixel(unsigned int x, unsigned int y, Color color);
+  Color get_pixel(unsigned int x, unsigned int y);
 
-  void WriteFile(const char* filename);
+  void write_file(const char* filename);
 };

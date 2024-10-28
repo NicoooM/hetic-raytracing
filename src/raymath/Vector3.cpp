@@ -6,7 +6,7 @@ Vector3::Vector3() : x(0), y(0), z(0)
 {
 }
 
-Vector3::Vector3(float iX, float iY, float iZ) : x(iX), y(iY), z(iZ)
+Vector3::Vector3(float x, float y, float z) : x(x), y(y), z(z) 
 {
 }
 
@@ -14,37 +14,37 @@ Vector3::~Vector3()
 {
 }
 
-float Vector3::X() const
+float Vector3::get_x() const
 {
     return x;
 }
 
-float Vector3::Y() const
+float Vector3::get_y() const
 {
     return y;
 }
 
-float Vector3::Z() const
+float Vector3::get_z() const
 {
     return z;
 }
 
-Vector3 Vector3::Normalize() const
+Vector3 Vector3::normalize() const
 {
     float length = sqrt(x * x + y * y + z * z);
     return Vector3(x / length, y / length, z / length);
 }
 
-float Vector3::DotProduct(Vector3 const &vec) const
+float Vector3::dot_product(Vector3 const &vec) const
 {
     return x * vec.x + y * vec.y + z * vec.z;
 }
 
-Vector3 Vector3::Projection(Vector3 const &vec) const
+Vector3 Vector3::projection(Vector3 const &vec) const
 {
 }
 
-float Vector3::Pythagorean() const
+float Vector3::get_length() const
 {
     return sqrt(x * x + y * y + z * z);
 }
@@ -72,15 +72,15 @@ Vector3 Vector3::operator*(float const &val) const
     return Vector3(x * val, y * val, z * val);
 }
 
-// Vector3 Vector3::Reflect(Vector3 const &normal) const
+// Vector3 Vector3::reflect(Vector3 const &normal) const
 // {
-//     Vector3 proj = this->Projection(normal);
+//     Vector3 proj = this->projection(normal);
 //     proj = proj * -2;
-//     Vector3 reflectDir = *this + proj;
+//     Vector3 reflect_dir = *this + proj;
 //     return ;
 // }
 
-std::ostream &operator<<(std::ostream &_stream, Vector3 const &vec)
+std::ostream &operator<<(std::ostream &stream, Vector3 const &vec)
 {
-    return _stream << "(" << vec.x << "," << vec.y << "," << vec.z << ")";
+    return stream << "(" << vec.x << "," << vec.y << "," << vec.z << ")";
 }

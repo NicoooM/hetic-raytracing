@@ -2,7 +2,7 @@
 #include "Image.hpp"
 #include "Sphere.hpp"
 #include "Ray.hpp"
-#include "Vector3.hpp" // Assuming you have this class for vector operations
+#include "Vector3.hpp"
 
 int main()
 {
@@ -23,22 +23,36 @@ int main()
           (y - 256) / 100.0,
           1.0);
 
-      Vector3 rayDirection = (pixelPosition - cameraOrigin).Normalize();
+      Vector3 rayDirection = (pixelPosition - cameraOrigin).normalize();
       Ray ray(cameraOrigin, rayDirection);
 
-      if (ray.Intersect(sphere))
+      if (ray.is_intersecting(sphere))
       {
-        image.SetPixel(x, y, red);
+        Vector3 hitPoint = ray.hit_sphere(sphere);
+        std::cout << "Hit point at (" << x << "," << y << "): " << hitPoint << std::endl;
+        Vector3 normal = (hitPoint - sphere.get_center()).normalize();
+        
+        Color normalMapColor(
+          (normal.get_x() + 1.0f) * 0.5f,  
+          (normal.get_y() + 1.0f) * 0.5f,  
+          (normal.get_z() + 1.0f) * 0.5f   
+        );
+        
+        std::cout << "Normal Map Color at (" << x << "," << y << "): R=" << normalMapColor.R() 
+                  << " G=" << normalMapColor.G() 
+                  << " B=" << normalMapColor.B() << std::endl;
+
+        image.set_pixel(x, y, normalMapColor);
       }
       else
       {
         float gradient = static_cast<float>(y) / 512.0f;
-        image.SetPixel(x, y, Color(0, 0, gradient));
+        image.set_pixel(x, y, Color(0, 0, gradient));
       }
     }
   }
 
-  image.WriteFile("test.png");
+  image.write_file("test.png");
 
   return 0;
 }

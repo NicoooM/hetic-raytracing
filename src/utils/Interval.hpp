@@ -16,11 +16,9 @@ public:
     float Min() const;
     float Max() const;
 
-    bool Contains(float value) const;
-    bool Contains(Interval interval) const;
-    bool Overlaps(Interval interval) const;
-    Interval Intersection(Interval interval) const;
-    Interval Union(Interval interval) const;
+    float Size() const;
+    bool Contains(double value) const;
+    bool Surrounds(double value) const;
 
     Interval &operator=(Interval const &interval);
     friend std::ostream &operator<<(std::ostream &stream, Interval const &interval);

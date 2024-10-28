@@ -24,33 +24,19 @@ float Interval::Max() const
   return max;
 }
 
-bool Interval::Contains(float value) const
+float Interval::Size() const
+{
+  return max - min;
+}
+
+bool Interval::Contains(double value) const
 {
   return value >= min && value <= max;
 }
 
-bool Interval::Contains(Interval interval) const
+bool Interval::Surrounds(double value) const
 {
-  return interval.min >= min && interval.max <= max;
-}
-
-bool Interval::Overlaps(Interval interval) const
-{
-  return interval.min <= max && interval.max >= min;
-}
-
-Interval Interval::Intersection(Interval interval) const
-{
-  float newMin = std::max(min, interval.min);
-  float newMax = std::min(max, interval.max);
-  return Interval(newMin, newMax);
-}
-
-Interval Interval::Union(Interval interval) const
-{
-  float newMin = std::min(min, interval.min);
-  float newMax = std::max(max, interval.max);
-  return Interval(newMin, newMax);
+  return value > min && value < max;
 }
 
 Interval &Interval::operator=(Interval const &interval)

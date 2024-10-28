@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Image.hpp"
+#include <vector>
+#include <cmath>
 #include "../lodepng/lodepng.h"
 
 

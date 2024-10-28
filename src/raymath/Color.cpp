@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Color.hpp"
+#include <cmath>
+
 
 Color:: Color() : r(0), b(0), g(0)
 {  

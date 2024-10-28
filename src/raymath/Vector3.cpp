@@ -1,5 +1,7 @@
 #include <iostream>
 #include "Vector3.hpp"
+#include <cmath>
+
 
 Vector3::Vector3() : x(0), y(0), z(0)
 {

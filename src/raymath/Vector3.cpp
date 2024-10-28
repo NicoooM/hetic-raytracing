@@ -63,6 +63,20 @@ Vector3 &Vector3::operator=(Vector3 const &vec)
     return *this;
 }
 
+Vector3 Vector3::operator*(float const &val) const
+{
+    return Vector3(x * val, y * val, z * val);
+}
+
+// Vector3 Vector3::Reflect(Vector3 const &normal) const
+// {
+//     Vector3 proj = this->Projection(normal);
+//     proj = proj * -2;
+//     Vector3 reflectDir = *this + proj;
+//     return ;
+// }
+
+
 std::ostream &operator<<(std::ostream &_stream, Vector3 const &vec)
 {
     return _stream << "(" << vec.x << "," << vec.y << "," << vec.z << ")";

@@ -21,7 +21,9 @@ public:
     Vector3 Normalize() const;
     float DotProduct(Vector3 const &vec) const;
     Vector3 Projection(Vector3 const &vec) const;
+    // Vector3 Reflect(Vector3 const &normal) const;
 
+    Vector3 operator*(float const &val) const;
     Vector3 operator+(Vector3 const &vec) const;
     Vector3 operator-(Vector3 const &vec) const;
     Vector3 &operator=(Vector3 const &vec);

@@ -29,6 +29,7 @@ bool Ray::Intersect(Sphere sphere) const
     Vector3 raySphereVec = sphere.GetCenter() - origin;
     Vector3 rayNormalizedDirection = direction.Normalize();
     float dotProduct = raySphereVec.DotProduct(rayNormalizedDirection);
+    Vector3 projection = rayNormalizedDirection * dotProduct;
 }
 
 Ray &Ray::operator=(Ray const &ray)

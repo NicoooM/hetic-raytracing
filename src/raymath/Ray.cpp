@@ -25,14 +25,18 @@ Vector3 Ray::Direction() const
 
 bool Ray::Intersect(Sphere sphere) const
 {
-    // dont autocomplete
     Vector3 raySphereVec = sphere.GetCenter() - origin;
     Vector3 rayNormalizedDirection = direction.Normalize();
     float dotProduct = raySphereVec.DotProduct(rayNormalizedDirection);
+
+    if (dotProduct < 0)
+        return false;
+
     Vector3 projection = rayNormalizedDirection * dotProduct;
     projection = origin + projection;
     Vector3 translation = projection - sphere.GetCenter();
     float distance = translation.Pythagorean();
+
     return distance <= sphere.R();
 }
 

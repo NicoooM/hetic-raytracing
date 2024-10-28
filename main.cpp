@@ -10,7 +10,7 @@ int main()
   Color black;
 
   Image image(512, 512, black);
-  Sphere sphere(Vector3(0, 0, 2), 1.5, red);
+  Sphere sphere(Vector3(0, 0, 3), 1.5, red);
 
   Vector3 cameraOrigin(0, 0, 0);
 

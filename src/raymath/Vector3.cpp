@@ -2,7 +2,6 @@
 #include "Vector3.hpp"
 #include <cmath>
 
-
 Vector3::Vector3() : x(0), y(0), z(0)
 {
 }
@@ -45,6 +44,11 @@ Vector3 Vector3::Projection(Vector3 const &vec) const
 {
 }
 
+float Vector3::Pythagorean() const
+{
+    return sqrt(x * x + y * y + z * z);
+}
+
 Vector3 Vector3::operator+(Vector3 const &vec) const
 {
     return Vector3(x + vec.x, y + vec.y, z + vec.z);
@@ -75,7 +79,6 @@ Vector3 Vector3::operator*(float const &val) const
 //     Vector3 reflectDir = *this + proj;
 //     return ;
 // }
-
 
 std::ostream &operator<<(std::ostream &_stream, Vector3 const &vec)
 {

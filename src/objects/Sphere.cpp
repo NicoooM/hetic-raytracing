@@ -39,6 +39,11 @@ Color Sphere::GetColor() const // Renamed method
     return color;
 }
 
+Vector3 Sphere::GetCenter() const // Renamed method
+{
+    return center;
+}
+
 Sphere &Sphere::operator=(Sphere const &sphere)
 {
     center = sphere.center;

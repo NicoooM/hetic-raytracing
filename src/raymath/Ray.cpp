@@ -30,6 +30,10 @@ bool Ray::Intersect(Sphere sphere) const
     Vector3 rayNormalizedDirection = direction.Normalize();
     float dotProduct = raySphereVec.DotProduct(rayNormalizedDirection);
     Vector3 projection = rayNormalizedDirection * dotProduct;
+    projection = origin + projection;
+    Vector3 translation = projection - sphere.GetCenter();
+    float distance = translation.Pythagorean();
+    return distance <= sphere.R();
 }
 
 Ray &Ray::operator=(Ray const &ray)

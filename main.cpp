@@ -24,7 +24,6 @@ int main()
       } else
       {
         float gradient = y / 512.0;
-        std::cout << "gradient: " << gradient << std::endl;
         image.SetPixel(x, y, Color(0, 0, gradient));
       }
     }

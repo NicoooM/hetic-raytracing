@@ -12,7 +12,8 @@ int main()
   Color green(0, 1, 0);
   Color black;
 
-  Sphere sphere(0, 0, 0, 1, red);
+  Vector3 center(0, 0, 0);
+  Sphere sphere(center, 1, red);
   Vector3 vec(1, 2, 3);
 
   std::cout << vec << std::endl;

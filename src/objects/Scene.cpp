@@ -23,29 +23,30 @@ Image Scene::render(ShadingType shading_type) const {
 
     // Nombre d'échantillons par pixel pour l'anti-aliasing
     const int samples_per_pixel = 4; // Par exemple, 4 pour un grille de 2x2, ou 16 pour 4x4
+    const int sqrt_samples_per_pixel = std::sqrt(samples_per_pixel);
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             Color accumulated_color(0, 0, 0);
 
             // Supersampling: générer plusieurs rayons par pixel
-            for (int sx = 0; sx < std::sqrt(samples_per_pixel); sx++) {
-                for (int sy = 0; sy < std::sqrt(samples_per_pixel); sy++) {
+            for (int sx = 0; sx < sqrt_samples_per_pixel; sx++) {
+                for (int sy = 0; sy < sqrt_samples_per_pixel; sy++) {
                     // Calcul des décalages pour sous-échantillonnage
-                    float offsetX = (sx + 0.5f) / std::sqrt(samples_per_pixel);
-                    float offsetY = (sy + 0.5f) / std::sqrt(samples_per_pixel);
+                    float offsetX = (sx + 0.5f) / sqrt_samples_per_pixel;
+                    float offsetY = (sy + 0.5f) / sqrt_samples_per_pixel;
 
                     // Génération d'un rayon légèrement décalé
                     Ray ray = camera.generate_ray(x + offsetX, y + offsetY, width, height);
                     Color sample_color = calculate_pixel_color(ray, Vector3(x + offsetX, y + offsetY, 0), shading_type);
 
                     // Additionne la couleur de l'échantillon au total
-                    accumulated_color =accumulated_color + sample_color;
+                    accumulated_color = accumulated_color + sample_color;
                 }
             }
 
             // Moyenne de la couleur accumulée pour ce pixel
-            Color pixel_color = accumulated_color / std::sqrt(samples_per_pixel);
+            Color pixel_color = accumulated_color / samples_per_pixel;
             image.set_pixel(x, y, pixel_color);
         }
     }

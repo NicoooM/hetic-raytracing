@@ -81,7 +81,7 @@ Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position
             Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
             
             if (shading_type == PHONG) {
-            return calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Couleur verte
+            return calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Couleur jaune
         } else if (shading_type == COOK_TORRANCE) {
                 // return calculate_cook_torrance(hit_point, normal, view_dir, Color(0.0, 1.0, 0.0));
             }

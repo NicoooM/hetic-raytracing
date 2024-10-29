@@ -6,7 +6,8 @@ Rectangle::Rectangle() : center(Vector3()), color(Color())
 {
 }
 
-Rectangle::Rectangle(Vector3 iCenter, Color iColor) : center(iCenter), color(iColor)
+Rectangle::Rectangle(Vector3 iCenter, Color iColor, float iWidth, float iHeight) 
+    : center(iCenter), color(iColor), width(iWidth), height(iHeight)
 {
     // Initialisation ou logique supplémentaire si nécessaire
 }

@@ -10,9 +10,13 @@ private:
     Vector3 center;
     Color color;
 
+
 public:
+    float width;
+    float height;
+
     Rectangle();
-    Rectangle(Vector3 center, Color color);
+    Rectangle(Vector3 center, Color color, float width, float height);
     ~Rectangle();
 
     float get_x() const;

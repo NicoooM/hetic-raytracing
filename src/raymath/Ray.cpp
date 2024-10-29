@@ -64,8 +64,8 @@ bool Ray::is_intersecting(Rectangle rectangle) const {
 
     // Vérifier si le point est à l'intérieur des limites du rectangle
     // Supposons que le rectangle soit centré sur 'center' avec une largeur et une hauteur données
-    float half_width = 1.0; // Remplacez par la largeur réelle du rectangle
-    float half_height = 1.0; // Remplacez par la hauteur réelle du rectangle
+    float half_width = rectangle.width / 2.0;
+    float half_height = rectangle.height / 2.0;
 
     if (fabs(hit_point.get_x() - center.get_x()) <= half_width &&
         fabs(hit_point.get_y() - center.get_y()) <= half_height) {
@@ -117,8 +117,8 @@ Vector3 Ray::hit_rectangle(Rectangle rectangle) const
 
     // Vérifier si le point est à l'intérieur des limites du rectangle
     // Supposons que le rectangle soit centré sur 'center' avec une largeur et une hauteur données
-    float half_width = 1.0; // Remplacez par la largeur réelle du rectangle
-    float half_height = 1.0; // Remplacez par la hauteur réelle du rectangle
+    float half_width = rectangle.width / 2.0;
+    float half_height = rectangle.height / 2.0;
 
     if (fabs(hit_point.get_x() - center.get_x()) <= half_width &&
         fabs(hit_point.get_y() - center.get_y()) <= half_height) {

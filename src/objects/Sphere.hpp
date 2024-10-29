@@ -7,13 +7,13 @@
 class Sphere
 {
 private:
-    vector3 center;
+    Vector3 center;
     float r = 0;
     Color color;
 
 public:
     Sphere();
-    Sphere(vector3 center, float r, Color color);
+    Sphere(Vector3 center, float r, Color color);
     ~Sphere();
 
     float get_x() const;
@@ -21,7 +21,7 @@ public:
     float get_z() const;
     float get_r() const;
     Color get_color() const;
-    vector3 get_center() const;
+    Vector3 get_center() const;
 
     Sphere &operator=(Sphere const &sphere);
     friend std::ostream &operator<<(std::ostream &_stream, Sphere const &sphere);

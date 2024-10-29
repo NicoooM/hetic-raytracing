@@ -13,32 +13,54 @@ Ray::~Ray()
 {
 }
 
-Vector3 Ray::Origin() const
+Vector3 Ray::get_origin() const
 {
     return origin;
 }
 
-Vector3 Ray::Direction() const
+Vector3 Ray::get_direction() const
 {
     return direction;
 }
 
-bool Ray::Intersect(Sphere sphere) const
+// TODO: Maybe remove this function because we do the same thing in hit_sphere
+bool Ray::is_intersecting(Sphere sphere) const
 {
-    Vector3 raySphereVec = sphere.GetCenter() - origin;
-    Vector3 rayNormalizedDirection = direction.Normalize();
-    float dotProduct = raySphereVec.DotProduct(rayNormalizedDirection);
+    Vector3 raySphereVec = sphere.get_center() - origin;
+    Vector3 rayNormalizedDirection = direction.normalize();
+    float dotProduct = raySphereVec.dot_product(rayNormalizedDirection);
 
     if (dotProduct < 0)
         return false;
 
     Vector3 projection = rayNormalizedDirection * dotProduct;
     projection = origin + projection;
-    Vector3 translation = projection - sphere.GetCenter();
-    float distance = translation.Pythagorean();
+    Vector3 translation = projection - sphere.get_center();
+    float distance = translation.pythagorean();
 
-    return distance <= sphere.R();
+    return distance <= sphere.get_r();
 }
+
+Vector3 Ray::hit_sphere(Sphere sphere) const
+{
+    Vector3 distance_between_ray_origin_and_sphere_center = sphere.get_center() - origin;
+    Vector3 ray_normalized_direction = direction.normalize();
+    float dot_product = distance_between_ray_origin_and_sphere_center.dot_product(ray_normalized_direction);
+    
+    Vector3 projection = ray_normalized_direction * dot_product;
+    projection = origin + projection;
+    Vector3 center_to_projection = projection - sphere.get_center();
+    float distance = center_to_projection.pythagorean();
+
+    if (distance > sphere.get_r())
+        return Vector3();
+        
+
+    float a = sqrt(sphere.get_r() * sphere.get_r() - distance * distance);
+    Vector3 coordinate_of_intersection =  projection + (ray_normalized_direction * a);
+    return coordinate_of_intersection;
+}
+
 
 Ray &Ray::operator=(Ray const &ray)
 {

@@ -15,17 +15,17 @@ Color::~ Color()
 {
 }
 
-float Color::R()
+float Color::R() const
 {
   return r;
 }
 
-float Color::G()
+float Color::G() const
 {
   return g;
 }
 
-float Color::B()
+float Color::B() const
 {
   return b;
 }
@@ -51,6 +51,14 @@ Color& Color::operator=(Color const& col) {
   g = col.g;
   b = col.b;
   return *this;
+}
+
+Color Color::operator*(float scalar) const {
+    return Color(R() * scalar, G() * scalar, B() * scalar);
+}
+
+Color Color::operator*(const Color& other) const {
+    return Color(R() * other.R(), G() * other.G(), B() * other.B());
 }
 
 /**

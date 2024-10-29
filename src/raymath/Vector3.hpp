@@ -18,10 +18,10 @@ public:
     float Y() const;
     float Z() const;
 
-    Vector3 Normalize() const;
-    float DotProduct(Vector3 const &vec) const;
-    Vector3 Projection(Vector3 const &vec) const;
-    float Pythagorean() const;
+    Vector3 normalize() const;
+    float dot_product(Vector3 const &vec) const;
+    Vector3 projection(Vector3 const &vec) const;
+    float pythagorean() const;
     // Vector3 Reflect(Vector3 const &normal) const;
 
     Vector3 operator*(float const &val) const;

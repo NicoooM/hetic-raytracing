@@ -25,14 +25,14 @@ Image::~ Image()
 {
 }
 
-void Image::SetPixel(unsigned int x, unsigned int y, Color color) {
+void Image::set_pixel(unsigned int x, unsigned int y, Color color) {
   unsigned int index = (y * width) + x;
 
   if (index >= buffer.size()) { throw std::invalid_argument("Image: Invalid index"); }
   buffer[index] = color;
 }
 
-Color Image::GetPixel(unsigned int x, unsigned int y) {
+Color Image::get_pixel(unsigned int x, unsigned int y) {
   unsigned int index = (y * width) + x;
 
   if (index >= buffer.size()) { throw std::invalid_argument("Image: Invalid index"); }
@@ -40,7 +40,7 @@ Color Image::GetPixel(unsigned int x, unsigned int y) {
 }
 
 
-void Image::WriteFile(const char * filename) {
+void Image::write_file(const char * filename) {
   std::vector<unsigned char> image;
   image.resize(width * height * 4);
   for(unsigned index = 0; index < buffer.size(); index++) {

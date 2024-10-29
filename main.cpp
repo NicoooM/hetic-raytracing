@@ -2,43 +2,30 @@
 #include "Image.hpp"
 #include "Sphere.hpp"
 #include "Ray.hpp"
-#include "Vector3.hpp" // Assuming you have this class for vector operations
+#include "Vector3.hpp"
+#include "Scene.hpp"
 
 int main()
 {
-  Color red(1, 0, 0);
-  Color black;
+  // Setup scene
+  Camera camera(Vector3(0, 0, 0));
+  Scene scene(512, 512, camera);
 
-  Image image(512, 512, black);
-  Sphere sphere(Vector3(0, 0, 3), 1.5, red);
+  // Add objects
+  Sphere sphere(Vector3(0, 0, 3), 2, Color(1.0, 0.0, 0.0));
+  scene.add_object(sphere);
 
-  Vector3 cameraOrigin(0, 0, 0);
+  // Add lights
+  // Light light1(Vector3(2, 1.5, -1), Color(1.0, 0.7, 0.4), 2);
+  Light light2(Vector3(-1.5, -0.5, -0.8), Color(0.4, 0.5, 1.0), 1.2);  
+  // scene.add_light(light1);
+  scene.add_light(light2);
 
-  for (int y = 0; y < 512; y++)
-  {
-    for (int x = 0; x < 512; x++)
-    {
-      Vector3 pixelPosition(
-          (x - 256) / 100.0,
-          (y - 256) / 100.0,
-          1.0);
 
-      Vector3 rayDirection = (pixelPosition - cameraOrigin).Normalize();
-      Ray ray(cameraOrigin, rayDirection);
 
-      if (ray.Intersect(sphere))
-      {
-        image.SetPixel(x, y, red);
-      }
-      else
-      {
-        float gradient = static_cast<float>(y) / 512.0f;
-        image.SetPixel(x, y, Color(0, 0, gradient));
-      }
-    }
-  }
-
-  image.WriteFile("test.png");
+  // Render and save
+  Image renderedImage = scene.render();
+  renderedImage.write_file("test.png");
 
   return 0;
 }

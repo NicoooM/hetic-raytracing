@@ -29,22 +29,22 @@ float Vector3::Z() const
     return z;
 }
 
-Vector3 Vector3::Normalize() const
+Vector3 Vector3::normalize() const
 {
     float length = sqrt(x * x + y * y + z * z);
     return Vector3(x / length, y / length, z / length);
 }
 
-float Vector3::DotProduct(Vector3 const &vec) const
+float Vector3::dot_product(Vector3 const &vec) const
 {
     return x * vec.x + y * vec.y + z * vec.z;
 }
 
-Vector3 Vector3::Projection(Vector3 const &vec) const
+Vector3 Vector3::projection(Vector3 const &vec) const
 {
 }
 
-float Vector3::Pythagorean() const
+float Vector3::pythagorean() const
 {
     return sqrt(x * x + y * y + z * z);
 }

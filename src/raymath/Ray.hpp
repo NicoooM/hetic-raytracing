@@ -15,10 +15,11 @@ public:
     Ray(Vector3 origin, Vector3 direction);
     ~Ray();
 
-    Vector3 Origin() const;
-    Vector3 Direction() const;
+    Vector3 get_origin() const;
+    Vector3 get_direction() const;
 
-    bool Intersect(Sphere sphere) const;
+    bool is_intersecting(Sphere sphere) const;
+    Vector3 hit_sphere(Sphere sphere) const;
 
     Ray &operator=(Ray const &ray);
     friend std::ostream &operator<<(std::ostream &_stream, Ray const &ray);

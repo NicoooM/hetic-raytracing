@@ -14,11 +14,13 @@ public:
   Color(float r, float g, float b);
   ~Color();
 
-  float R();
-  float G();
-  float B();
+  float R() const;
+  float G() const;
+  float B() const;
 
   Color operator+(Color const &col);
+  Color operator*(float scalar) const;
+  Color operator*(const Color& other) const;
   Color &operator=(Color const &col);
   friend std::ostream &operator<<(std::ostream &_stream, Color const &col);
 };

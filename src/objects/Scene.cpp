@@ -2,7 +2,11 @@
 #include "../shaders/hit.hpp"
 
 Scene::Scene(int width, int height, const Camera& camera)
-    : width(width), height(height), camera(camera), background_color(0,0,0) {}
+    : width(width), height(height), camera(camera), background_color(0,0,0) {
+    // Ajout d'un plan par défaut
+    Plan default_plan(Vector3(0, 1, 0), Vector3(1, 512, 1)); // Position et normale du plan
+    plans.push_back(default_plan);
+}
 
 void Scene::add_object(const Sphere& object) {
     objects.push_back(object);
@@ -10,6 +14,10 @@ void Scene::add_object(const Sphere& object) {
 
 void Scene::add_object(const Rectangle& object) {
     rectangles.push_back(object);
+}
+
+void Scene::add_object(const Plan& object) {
+    plans.push_back(object);
 }
 
 void Scene::add_light(const Light& light) {
@@ -61,6 +69,21 @@ Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position
                 return calculate_phong_lighting(hit_point, normal, view_dir, rectangle.get_color());
             } else if (shading_type == COOK_TORRANCE) {
                 // return calculate_cook_torrance(hit_point, normal, view_dir, rectangle.get_color());
+            }
+        }
+    }
+    
+    for (const auto& plan : plans) {
+        Hit hit = ray.hit_plan(plan);
+        if (hit.HasCollision()) {
+            Vector3 hit_point = hit.Point();
+            Vector3 normal = hit.Normal();
+            Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+            
+            if (shading_type == PHONG) {
+            return calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Couleur verte
+        } else if (shading_type == COOK_TORRANCE) {
+                // return calculate_cook_torrance(hit_point, normal, view_dir, Color(0.0, 1.0, 0.0));
             }
         }
     }

@@ -128,6 +128,24 @@ Hit Ray::hit_rectangle(Rectangle rectangle) const
     return Hit::NoHit(); // Pas d'intersection
 }
 
+Hit Ray::hit_plan(Plan plan) const {
+    Vector3 normal = plan.getNormal();
+    Vector3 point_on_plan = plan.getPoint();
+
+    float denom = normal.dot_product(direction);
+    if (fabs(denom) < 1e-6) {
+        return Hit::NoHit(); // Le rayon est parallèle au plan
+    }
+
+    float t = (point_on_plan - origin).dot_product(normal) / denom;
+    if (t < 0) {
+        return Hit::NoHit(); // Le plan est derrière le rayon
+    }
+
+    Vector3 hit_point = origin + direction * t;
+    return Hit(t, hit_point, normal);
+}
+
 Ray &Ray::operator=(Ray const &ray)
 {
     origin = ray.origin;

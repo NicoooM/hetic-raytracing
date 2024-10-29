@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-#include "Rectangle.hpp"
 #include "Sphere.hpp"
 #include "Scene.hpp"
 #include "Camera.hpp"
@@ -21,8 +20,8 @@ int main() {
     scene.add_object(sphere);
 
     // Ajout d'un rectangle pour le sol
-    Rectangle rectangle(Vector3(0, 0, 1), Color(0.0, 1.0, 0.0), 100.0, 100.0);
-    scene.add_object(rectangle);
+    // Rectangle rectangle(Vector3(0, 0, 1), Color(0.0, 1.0, 0.0), 100.0, 100.0);
+    // scene.add_object(rectangle);
 
     Light light(Vector3(-1.5, -0.5, -0.8), Color(0.4, 0.5, 1.0), 1.2);  
     scene.add_light(light);

@@ -45,7 +45,7 @@ Image Scene::render(ShadingType shading_type) const {
             }
 
             // Moyenne de la couleur accumulée pour ce pixel
-            Color pixel_color = accumulated_color / samples_per_pixel;
+            Color pixel_color = accumulated_color / std::sqrt(samples_per_pixel);
             image.set_pixel(x, y, pixel_color);
         }
     }

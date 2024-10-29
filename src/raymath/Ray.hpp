@@ -20,6 +20,7 @@ public:
 
     bool is_intersecting(Sphere sphere) const;
     Vector3 hit_sphere(Sphere sphere) const;
+    Ray reflect(Vector3 origin, Vector3 normal) const;
 
     Ray &operator=(Ray const &ray);
     friend std::ostream &operator<<(std::ostream &_stream, Ray const &ray);

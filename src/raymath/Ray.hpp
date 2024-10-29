@@ -3,6 +3,7 @@
 #include "Vector3.hpp"
 #include "../objects/Sphere.hpp"
 #include "../objects/Rectangle.hpp"
+#include "../shaders/hit.hpp"
 #include <iostream>
 
 class Ray
@@ -21,8 +22,8 @@ public:
 
     bool is_intersecting(Sphere sphere) const;
     bool is_intersecting(Rectangle rectangle) const;
-    Vector3 hit_sphere(Sphere sphere) const;
-    Vector3 hit_rectangle(Rectangle rectangle) const;
+    Hit hit_sphere(Sphere sphere) const;
+    Hit hit_rectangle(Rectangle rectangle) const;
     Ray &operator=(Ray const &ray);
     friend std::ostream &operator<<(std::ostream &_stream, Ray const &ray);
 };

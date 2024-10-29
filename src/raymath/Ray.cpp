@@ -2,6 +2,7 @@
 #include "Ray.hpp"
 #include "Vector3.hpp"
 #include "../objects/Rectangle.hpp"
+#include "../shaders/hit.hpp"
 
 Ray::Ray() : origin(Vector3()), direction(Vector3())
 {
@@ -75,8 +76,7 @@ bool Ray::is_intersecting(Rectangle rectangle) const {
     return false; // Pas d'intersection
 }
 
-Vector3 Ray::hit_sphere(Sphere sphere) const
-{
+Hit Ray::hit_sphere(Sphere sphere) const {
     Vector3 distance_between_ray_origin_and_sphere_center = sphere.get_center() - origin;
     Vector3 ray_normalized_direction = direction.normalize();
     float dot_product = distance_between_ray_origin_and_sphere_center.dot_product(ray_normalized_direction);
@@ -87,15 +87,15 @@ Vector3 Ray::hit_sphere(Sphere sphere) const
     float distance = center_to_projection.pythagorean();
 
     if (distance > sphere.get_r())
-        return Vector3();
+        return Hit::NoHit();
         
-
     float a = sqrt(sphere.get_r() * sphere.get_r() - distance * distance);
     Vector3 coordinate_of_intersection =  projection + (ray_normalized_direction * a);
-    return coordinate_of_intersection;
+    Vector3 normal = (coordinate_of_intersection - sphere.get_center()).normalize();
+    return Hit(distance, coordinate_of_intersection, normal);
 }
 
-Vector3 Ray::hit_rectangle(Rectangle rectangle) const 
+Hit Ray::hit_rectangle(Rectangle rectangle) const 
 {
     // Supposons que le rectangle soit aligné avec les axes pour simplifier
     Vector3 normal = Vector3(0, 0, 1); // Normal du plan du rectangle
@@ -104,12 +104,12 @@ Vector3 Ray::hit_rectangle(Rectangle rectangle) const
     // Calculer t pour l'intersection du rayon avec le plan
     float denom = normal.dot_product(direction);
     if (fabs(denom) < 1e-6) {
-        return Vector3(); // Le rayon est parallèle au plan
+        return Hit::NoHit(); // Le rayon est parallèle au plan
     }
 
     float t = (center - origin).dot_product(normal) / denom;
     if (t < 0) {
-        return Vector3(); // Le plan est derrière le rayon
+        return Hit::NoHit(); // Le plan est derrière le rayon
     }
 
     // Calculer le point d'intersection
@@ -122,13 +122,11 @@ Vector3 Ray::hit_rectangle(Rectangle rectangle) const
 
     if (fabs(hit_point.get_x() - center.get_x()) <= half_width &&
         fabs(hit_point.get_y() - center.get_y()) <= half_height) {
-        return hit_point;
+        return Hit(t, hit_point, normal);
     }
 
-    return Vector3(); // Pas d'intersection
+    return Hit::NoHit(); // Pas d'intersection
 }
-
-
 
 Ray &Ray::operator=(Ray const &ray)
 {

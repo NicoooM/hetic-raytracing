@@ -1,4 +1,5 @@
 #include "Scene.hpp"
+#include "../shaders/hit.hpp"
 
 Scene::Scene(int width, int height, const Camera& camera)
     : width(width), height(height), camera(camera), background_color(0,0,0) {}
@@ -35,9 +36,10 @@ Image Scene::render(ShadingType shading_type) const {
 
 Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position, ShadingType shading_type) const {
     for (const auto& sphere : objects) {
-        if (ray.is_intersecting(sphere)) {
-            Vector3 hit_point = ray.hit_sphere(sphere);
-            Vector3 normal = (hit_point - sphere.get_center()).normalize();
+        Hit hit = ray.hit_sphere(sphere);
+        if (hit.HasCollision()) {
+            Vector3 hit_point = hit.Point();
+            Vector3 normal = hit.Normal();
             Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
             
             if (shading_type == PHONG) {
@@ -49,9 +51,10 @@ Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position
     }
 
     for (const auto& rectangle : rectangles) {
-        if (ray.is_intersecting(rectangle)) {
-            Vector3 hit_point = ray.hit_rectangle(rectangle);
-            Vector3 normal = (hit_point - rectangle.get_center()).normalize(); // Assurez-vous que cette logique est correcte pour un rectangle
+        Hit hit = ray.hit_rectangle(rectangle);
+        if (hit.HasCollision()) {
+            Vector3 hit_point = hit.Point();
+            Vector3 normal = hit.Normal();
             Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
             
             if (shading_type == PHONG) {

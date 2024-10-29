@@ -2,11 +2,11 @@
 #include "Sphere.hpp"
 #include "../raymath/Vector3.hpp"
 
-Sphere::Sphere() : center(vector3()), r(0), color(Color())
+Sphere::Sphere() : center(Vector3()), r(0), color(Color())
 {
 }
 
-Sphere::Sphere(vector3 iCenter, float iR, Color iColor) : center(iCenter), r(iR), color(iColor)
+Sphere::Sphere(Vector3 iCenter, float iR, Color iColor) : center(iCenter), r(iR), color(iColor)
 {
 }
 
@@ -39,7 +39,7 @@ Color Sphere::get_color() const
     return color;
 }
 
-vector3 Sphere::get_center() const
+Vector3 Sphere::get_center() const
 {
     return center;
 }

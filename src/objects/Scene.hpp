@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Sphere.hpp"
+#include "Rectangle.hpp"
 #include "../rayimage/Image.hpp"
 #include "Color.hpp"
 #include "Camera.hpp"
@@ -9,6 +10,7 @@
 class Scene {
 private:
     std::vector<Sphere> objects;
+    std::vector<Rectangle> rectangles;
     std::vector<Light> lights;
     Camera camera;
     int width;
@@ -18,6 +20,7 @@ private:
 public:
     Scene(int width, int height, const Camera& camera);
     void add_object(const Sphere& object);
+    void add_object(const Rectangle& object);
     void add_light(const Light& light);
     void set_background_color(const Color& color);
     enum ShadingType {

@@ -33,18 +33,25 @@ Image Scene::render(ShadingType shading_type) const
         for (int x = 0; x < width; x++)
         {
             Ray ray = camera.generate_ray(x, y, width, height);
-            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), shading_type);
+            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), shading_type, 3);
             image.set_pixel(x, y, pixel_color);
         }
     }
 
-    // loop in image and make the reflexion
-
     return image;
 }
 
-Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_position, ShadingType shading_type) const
+Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_position, ShadingType shading_type, int depth) const
 {
+
+    if (depth <= 0)
+    {
+        // Base case: background color or no further recursion allowed
+        return Color(0, 0, 0); // black or background color
+    }
+
+    Color final_color(0, 0, 0); // initialize final color as black or background
+
     for (const auto &sphere : objects)
     {
         Hit hit = ray.hit_sphere(sphere);
@@ -54,14 +61,27 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_position
             Vector3 normal = hit.Normal();
             Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
 
+            // Base color from lighting model (Phong or Cook-Torrance)
+            Color base_color;
             if (shading_type == PHONG)
             {
-                return calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
+                base_color = calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
             }
             else if (shading_type == COOK_TORRANCE)
             {
-                // return calculate_cook_torrance(hit_point, normal, view_dir, sphere.get_color());
+                // base_color = calculate_cook_torrance(hit_point, normal, view_dir, sphere.get_color());
             }
+
+            float reflection_strength = 0.5; // Coefficient for reflective materials
+            if (reflection_strength > 0)
+            {
+                Ray reflected_ray = ray.reflect(hit_point, normal);
+                Color reflected_color = calculate_pixel_color(reflected_ray, hit_point, shading_type, depth - 1);
+                base_color = base_color * (1.0f - reflection_strength) + reflected_color * reflection_strength;
+            }
+
+            final_color = base_color;
+            break; // Assuming one hit per ray; if multiple, this may need adjustment
         }
     }
 
@@ -85,8 +105,17 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_position
         }
     }
 
-    float gradient = static_cast<float>(pixel_position.get_y()) / height;
-    return Color(0, 0, gradient);
+    // float gradient = static_cast<float>(pixel_position.get_y()) / height;
+    // return Color(0, 0, gradient);
+
+    // If no objects are hit, return the background color (gradient)
+    if (final_color == Color(0, 0, 0))
+    {
+        float gradient = static_cast<float>(pixel_position.get_y()) / height;
+        return Color(0, 0, gradient); // background gradient
+    }
+
+    return final_color;
 }
 
 Color Scene::calculate_phong_lighting(const Vector3 &hit_point, const Vector3 &normal,

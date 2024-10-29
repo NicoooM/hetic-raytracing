@@ -10,8 +10,8 @@
 int main()
 {
   // Configuration de l'image
-  int image_width = 512;
-  int image_height = 512;
+  int image_width = 1920;
+  int image_height = 1080;
 
   // Add lights
   // Light light1(Vector3(2, 1.5, -1), Color(1.0, 0.7, 0.4), 2);
@@ -21,12 +21,24 @@ int main()
   Scene scene(image_width, image_height, camera);
 
   // Ajout d'une sphère
-  Sphere sphere(Vector3(0, 0, 3), 2, Color(1.0, 0.0, 0.0));
+  Sphere sphere(Vector3(-8, 0, 3), 1.5, Color(1.0, 0.0, 0.0));
   scene.add_object(sphere);
 
+  Sphere sphere2(Vector3(8, 0, 3), 1.5, Color(0.0, 1.0, 0.0));
+  scene.add_object(sphere2);
+
+  Sphere sphere3(Vector3(0, 0, 3), 1.5, Color(0.0, 0.0, 1.0));
+  scene.add_object(sphere3);
+
+  Sphere sphere4(Vector3(0, 5, 5), 1.5, Color(1.0, 1.0, 0.0));
+  scene.add_object(sphere4);
+
+  Sphere sphere5(Vector3(0, -5, 5), 1.5, Color(1.0, 0.0, 1.0));
+  scene.add_object(sphere5);
+
   // Ajout d'un rectangle pour le sol
-  Rectangle rectangle(Vector3(0, 0, 1), Color(0.0, 1.0, 0.0), 100.0, 100.0);
-  scene.add_object(rectangle);
+  // Rectangle rectangle(Vector3(0, 0, 1), Color(0.0, 1.0, 0.0), 100.0, 100.0);
+  // scene.add_object(rectangle);
 
   Light light(Vector3(-1.5, -0.5, -0.8), Color(0.4, 0.5, 1.0), 1.2);
   scene.add_light(light);

@@ -99,20 +99,13 @@ Hit Ray::hit_sphere(Sphere sphere) const
     return Hit(distance, coordinate_of_intersection, (coordinate_of_intersection - sphere.get_center()).normalize());
 }
 
-// Ray Ray::reflect(Vector3 origin, Vector3 normal) const
-// {
-//     Vector3 normalized_direction = direction.normalize();
-//     Vector3 projection = normalized_direction * normal.dot_product(normalized_direction);
-//     projection = projection * (-2);
-//     Vector3 reflected_direction = normalized_direction + projection;
-//     return Ray(origin, reflected_direction);
-//     return Hit::NoHit();
-
-//     float a = sqrt(sphere.get_r() * sphere.get_r() - distance * distance);
-//     Vector3 coordinate_of_intersection = projection + (ray_normalized_direction * a);
-//     Vector3 normal = (coordinate_of_intersection - sphere.get_center()).normalize();
-//     return Hit(distance, coordinate_of_intersection, normal);
-// }
+Ray Ray::reflect(const Vector3 origin, const Vector3 normal) const
+{
+    Vector3 normalized_direction = direction.normalize();
+    Vector3 projection = normalized_direction * normal.dot_product(normalized_direction);
+    Vector3 reflected_direction = normalized_direction - projection * 2;
+    return Ray(origin + reflected_direction * 0.001, reflected_direction); // Slight offset to avoid artifacts
+}
 
 Hit Ray::hit_rectangle(Rectangle rectangle) const
 {
@@ -155,4 +148,10 @@ Ray &Ray::operator=(Ray const &ray)
     origin = ray.origin;
     direction = ray.direction;
     return *this;
+}
+
+std::ostream &operator<<(std::ostream &_stream, Ray const &ray)
+{
+    _stream << "Ray(" << ray.origin << ", " << ray.direction << ")";
+    return _stream;
 }

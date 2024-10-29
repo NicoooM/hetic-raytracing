@@ -22,7 +22,7 @@ public:
 
     bool is_intersecting(Sphere sphere) const;
     Hit hit_sphere(Sphere sphere) const;
-    // Ray reflect(Vector3 origin, Vector3 normal) const;
+    Ray reflect(Vector3 origin, Vector3 normal) const;
 
     bool is_intersecting(Rectangle rectangle) const;
     Hit hit_rectangle(Rectangle rectangle) const;

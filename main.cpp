@@ -18,6 +18,7 @@ int main()
   // Add lights
   // Light light1(Vector3(2, 1.5, -1), Color(1.0, 0.7, 0.4), 2);
   Light light2(Vector3(-1.5, -0.5, -0.8), Color(0.4, 0.5, 1.0), 1.2);  
+
   // scene.add_light(light1);
   scene.add_light(light2);
 

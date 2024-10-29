@@ -14,9 +14,9 @@ public:
     Vector3(float x, float y, float z);
     ~Vector3();
 
-    float X() const;
-    float Y() const;
-    float Z() const;
+    float get_x() const;
+    float get_y() const;
+    float get_z() const;
 
     Vector3 normalize() const;
     float dot_product(Vector3 const &vec) const;

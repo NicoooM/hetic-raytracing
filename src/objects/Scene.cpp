@@ -44,7 +44,7 @@ Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position
         }
     }
     
-    float gradient = static_cast<float>(pixel_position.Y()) / height;
+    float gradient = static_cast<float>(pixel_position.get_y()) / height;
     return Color(0, 0, gradient);
 }
 

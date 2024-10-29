@@ -16,17 +16,17 @@ Sphere::~Sphere()
 
 float Sphere::get_x() const
 {
-    return center.X();
+    return center.get_x();
 }
 
 float Sphere::get_y() const
 {
-    return center.Y();
+    return center.get_y();
 }
 
 float Sphere::get_z() const
 {
-    return center.Z();
+    return center.get_z();
 }
 
 float Sphere::get_r() const

@@ -13,14 +13,17 @@ target_include_directories(raytracing PUBLIC
                            "${PROJECT_SOURCE_DIR}/src/rayimage"
                            "${PROJECT_SOURCE_DIR}/src/lodepng"
                            "${PROJECT_SOURCE_DIR}/src/objects"
+                           "${PROJECT_SOURCE_DIR}/src/utils"
                            )
 
 add_subdirectory(./src/raymath)
 add_subdirectory(./src/rayimage)
 add_subdirectory(./src/lodepng)
 add_subdirectory(./src/objects)
+add_subdirectory(./src/utils)
 
 target_link_libraries(raytracing PUBLIC raymath)
 target_link_libraries(raytracing PUBLIC rayimage)
 target_link_libraries(raytracing PUBLIC lodepng)
 target_link_libraries(raytracing PUBLIC objects)
+target_link_libraries(raytracing PUBLIC utils)

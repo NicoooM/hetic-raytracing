@@ -1,5 +1,6 @@
-#include "iostream"
+#include <iostream>
 #include "Ray.hpp"
+#include "Vector3.hpp"
 
 Ray::Ray() : origin(Vector3()), direction(Vector3())
 {

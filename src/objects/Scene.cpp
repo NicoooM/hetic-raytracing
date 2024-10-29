@@ -4,7 +4,7 @@
 Scene::Scene(int width, int height, const Camera& camera)
     : width(width), height(height), camera(camera), background_color(0,0,0) {
     // Ajout d'un plan par défaut
-    Plan default_plan(Vector3(0, 1, 0), Vector3(0, 1, 0)); // Position et normale du plan
+    Plan default_plan(Vector3(0, 1, 0), Vector3(0, 500, 0)); // Position et normale du plan
     plans.push_back(default_plan);
 }
 

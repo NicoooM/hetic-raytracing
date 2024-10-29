@@ -8,8 +8,8 @@
 
 int main() {
     // Configuration de l'image
-    int image_width = 512;
-    int image_height = 512; 
+    int image_width = 1920;
+    int image_height = 1080; 
 
     // Création de la scène
     Camera camera(Vector3(0, 0, 0));

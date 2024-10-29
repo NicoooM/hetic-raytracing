@@ -26,7 +26,7 @@ int main()
 
   // Render and save
   Image renderedImage = scene.render();
-  renderedImage.write_file("test.png");
+  renderedImage.write_file("ball.png");
 
   return 0;
 }

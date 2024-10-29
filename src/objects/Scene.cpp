@@ -1,10 +1,23 @@
 #include "Scene.hpp"
+#include "../shaders/hit.hpp"
 
 Scene::Scene(int width, int height, const Camera& camera)
-    : width(width), height(height), camera(camera), background_color(0,0,0) {}
+    : width(width), height(height), camera(camera), background_color(0,0,0) {
+    // Ajout d'un plan par défaut
+    Plan default_plan(Vector3(0, 1, 0), Vector3(0, 1, 0)); // Position et normale du plan
+    plans.push_back(default_plan);
+}
 
 void Scene::add_object(const Sphere& object) {
     objects.push_back(object);
+}
+
+void Scene::add_object(const Rectangle& object) {
+    rectangles.push_back(object);
+}
+
+void Scene::add_object(const Plan& object) {
+    plans.push_back(object);
 }
 
 void Scene::add_light(const Light& light) {
@@ -31,15 +44,46 @@ Image Scene::render(ShadingType shading_type) const {
 
 Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position, ShadingType shading_type) const {
     for (const auto& sphere : objects) {
-        if (ray.is_intersecting(sphere)) {
-            Vector3 hit_point = ray.hit_sphere(sphere);
-            Vector3 normal = (hit_point - sphere.get_center()).normalize();
+        Hit hit = ray.hit_sphere(sphere);
+        if (hit.HasCollision()) {
+            Vector3 hit_point = hit.Point();
+            Vector3 normal = hit.Normal();
             Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
             
             if (shading_type == PHONG) {
                 return calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
             } else if (shading_type == COOK_TORRANCE) {
                 // return calculate_cook_torrance(hit_point, normal, view_dir, sphere.get_color());
+            }
+        }
+    }
+
+    for (const auto& rectangle : rectangles) {
+        Hit hit = ray.hit_rectangle(rectangle);
+        if (hit.HasCollision()) {
+            Vector3 hit_point = hit.Point();
+            Vector3 normal = hit.Normal();
+            Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+            
+            if (shading_type == PHONG) {
+                return calculate_phong_lighting(hit_point, normal, view_dir, rectangle.get_color());
+            } else if (shading_type == COOK_TORRANCE) {
+                // return calculate_cook_torrance(hit_point, normal, view_dir, rectangle.get_color());
+            }
+        }
+    }
+    
+    for (const auto& plan : plans) {
+        Hit hit = ray.hit_plan(plan);
+        if (hit.HasCollision()) {
+            Vector3 hit_point = hit.Point();
+            Vector3 normal = hit.Normal();
+            Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+            
+            if (shading_type == PHONG) {
+            return calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Couleur jaune
+        } else if (shading_type == COOK_TORRANCE) {
+                // return calculate_cook_torrance(hit_point, normal, view_dir, Color(0.0, 1.0, 0.0));
             }
         }
     }

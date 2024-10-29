@@ -18,7 +18,7 @@ public:
         point(p), 
         normal(n) {}
 
-    ~Hit() {}
+    ~Hit() = default;
 
     // Accesseurs
     bool HasCollision() const { return hasHit; }

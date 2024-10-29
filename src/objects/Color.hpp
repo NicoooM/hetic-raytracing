@@ -21,6 +21,7 @@ public:
   Color operator+(Color const &col);
   Color operator*(float scalar) const;
   Color operator*(const Color& other) const;
+  Color operator/(float scalar) const;
   Color &operator=(Color const &col);
   friend std::ostream &operator<<(std::ostream &_stream, Color const &col);
 };

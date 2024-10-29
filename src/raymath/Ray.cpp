@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include "Ray.hpp"
 #include "Vector3.hpp"
 

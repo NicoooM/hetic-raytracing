@@ -1,4 +1,7 @@
+#include <cmath>
 #include "Scene.hpp"
+
+
 
 Scene::Scene(int width, int height, const Camera& camera)
     : width(width), height(height), camera(camera), background_color(0,0,0) {}
@@ -18,16 +21,38 @@ void Scene::set_background_color(const Color& color) {
 Image Scene::render(ShadingType shading_type) const {
     Image image(width, height, background_color);
 
+    // Nombre d'échantillons par pixel pour l'anti-aliasing
+    const int samples_per_pixel = 4; // Par exemple, 4 pour un grille de 2x2, ou 16 pour 4x4
+
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            Ray ray = camera.generate_ray(x, y, width, height);
-            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), shading_type);
+            Color accumulated_color(0, 0, 0);
+
+            // Supersampling: générer plusieurs rayons par pixel
+            for (int sx = 0; sx < std::sqrt(samples_per_pixel); sx++) {
+                for (int sy = 0; sy < std::sqrt(samples_per_pixel); sy++) {
+                    // Calcul des décalages pour sous-échantillonnage
+                    float offsetX = (sx + 0.5f) / std::sqrt(samples_per_pixel);
+                    float offsetY = (sy + 0.5f) / std::sqrt(samples_per_pixel);
+
+                    // Génération d'un rayon légèrement décalé
+                    Ray ray = camera.generate_ray(x + offsetX, y + offsetY, width, height);
+                    Color sample_color = calculate_pixel_color(ray, Vector3(x + offsetX, y + offsetY, 0), shading_type);
+
+                    // Additionne la couleur de l'échantillon au total
+                    accumulated_color =accumulated_color + sample_color;
+                }
+            }
+
+            // Moyenne de la couleur accumulée pour ce pixel
+            Color pixel_color = accumulated_color / samples_per_pixel;
             image.set_pixel(x, y, pixel_color);
         }
     }
 
     return image;
 }
+
 
 Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position, ShadingType shading_type) const {
     for (const auto& sphere : objects) {

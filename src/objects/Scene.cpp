@@ -7,6 +7,10 @@ void Scene::add_object(const Sphere& object) {
     objects.push_back(object);
 }
 
+void Scene::add_object(const Rectangle& object) {
+    rectangles.push_back(object);
+}
+
 void Scene::add_light(const Light& light) {
     lights.push_back(light);
 }
@@ -40,6 +44,20 @@ Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position
                 return calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
             } else if (shading_type == COOK_TORRANCE) {
                 // return calculate_cook_torrance(hit_point, normal, view_dir, sphere.get_color());
+            }
+        }
+    }
+
+    for (const auto& rectangle : rectangles) {
+        if (ray.is_intersecting(rectangle)) {
+            Vector3 hit_point = ray.hit_rectangle(rectangle);
+            Vector3 normal = (hit_point - rectangle.get_center()).normalize(); // Assurez-vous que cette logique est correcte pour un rectangle
+            Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+            
+            if (shading_type == PHONG) {
+                return calculate_phong_lighting(hit_point, normal, view_dir, rectangle.get_color());
+            } else if (shading_type == COOK_TORRANCE) {
+                // return calculate_cook_torrance(hit_point, normal, view_dir, rectangle.get_color());
             }
         }
     }

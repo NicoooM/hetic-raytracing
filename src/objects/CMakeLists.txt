@@ -5,3 +5,4 @@ add_library(objects
   ${CMAKE_CURRENT_SOURCE_DIR}/Camera.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/Color.cpp
 )
+target_link_libraries(objects PUBLIC raymath)

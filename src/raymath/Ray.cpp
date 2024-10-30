@@ -1,7 +1,7 @@
 #include <iostream>
 #include "Ray.hpp"
 #include "Vector3.hpp"
-#include "../shaders/Hit.hpp"
+#include "../shaders/hit.hpp"
 
 Ray::Ray() : origin(Vector3()), direction(Vector3())
 {

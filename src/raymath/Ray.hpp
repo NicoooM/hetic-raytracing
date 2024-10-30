@@ -4,7 +4,7 @@
 #include "Vector3.hpp"
 #include "../objects/Sphere.hpp"
 #include "../objects/Plan.hpp"
-#include "../shaders/Hit.hpp"
+#include "../shaders/hit.hpp"
 
 class Ray
 {

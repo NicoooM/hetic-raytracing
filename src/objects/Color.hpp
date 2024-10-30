@@ -4,11 +4,12 @@
 
 class Color
 {
-public:
+private:
   float r = 0;
   float b = 0;
   float g = 0;
 
+public:
   Color();
   Color(float r, float g, float b);
   ~Color();

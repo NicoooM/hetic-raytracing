@@ -8,6 +8,10 @@ Ray Camera::generate_ray(float u, float v, int width, int height) const {
     float scale = tan(focal_length * 0.5 *  (M_PI / 180));
 
     // Convert to NDC (Normalized Device Coordinates)
+    
+    // TODO: to fix
+    // auto pixel_normalized_device_coordinate_x = (u + 0.5f) / width;
+    // auto pixel_normalized_device_coordinate_y = (v + 0.5f) / height;
     auto pixel_normalized_device_coordinate_x = u;
     auto pixel_normalized_device_coordinate_y = v;
  

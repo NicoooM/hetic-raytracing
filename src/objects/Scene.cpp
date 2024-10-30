@@ -3,8 +3,8 @@
 
 Scene::Scene(int width, int height, const Camera& camera)
     : width(width), height(height), camera(camera), background_color(0,0,0) {
-    // Add default plan
-    Plan default_plan(Vector3(0, 1, 0), Vector3(0, 500, 0)); // Location and normal of plan
+    // Modifions la position du plan pour qu'il soit plus visible
+    Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0)); // Position plus basse et normale vers le haut
     plans.push_back(default_plan);
 }
 
@@ -35,30 +35,67 @@ Image Scene::render() const {
     return image;
 }
 
-Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position) const {
-    for (const auto& sphere : objects) {
-        Hit hit = ray.hit_sphere(sphere);
-        if (hit.HasCollision()) {
-            Vector3 hit_point = hit.Point();
-            Vector3 normal = hit.Normal();
-            Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
-            return calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
-        }
-    }
-    
-    for (const auto& plan : plans) {
+Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_pos) const {
+    float closest_distance = std::numeric_limits<float>::infinity();
+    Hit closest_hit;
+    bool is_plan = false;
+    bool is_sphere = false;
+
+    // Vérifier les intersections avec les plans
+    for (const Plan& plan : plans) {
         Hit hit = ray.hit_plan(plan);
-        if (hit.HasCollision()) {
-            Vector3 hit_point = hit.Point();
-            Vector3 normal = hit.Normal();
-            Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
-            
-            return calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Yellow color
+        if (hit.HasCollision() && hit.Distance() < closest_distance) {
+            closest_distance = hit.Distance();
+            closest_hit = hit;
+            is_plan = true;
+            is_sphere = false;
         }
     }
-    
-    float gradient = static_cast<float>(pixel_position.get_y()) / height;
-    return Color(0, 0, gradient);
+
+    // Vérifier les intersections avec les sphères
+    for (const Sphere& sphere : objects) {
+        Hit hit = ray.hit_sphere(sphere);
+        if (hit.HasCollision() && hit.Distance() < closest_distance) {
+            closest_distance = hit.Distance();
+            closest_hit = hit;
+            is_sphere = true;
+            is_plan = false;
+        }
+    }
+
+    if (is_sphere) {
+        Vector3 hit_point = closest_hit.Point();
+        Vector3 normal = closest_hit.Normal();
+        Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+        
+        for (const Sphere& sphere : objects) {
+            if (ray.hit_sphere(sphere).HasCollision()) {
+                return calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
+            }
+        }
+    } else if (is_plan) {
+        Vector3 hit_point = closest_hit.Point();
+        
+        // Créer la grille
+        float grid_size = 5.0f;
+        float x = hit_point.get_x();
+        float z = hit_point.get_z();
+        
+        // Calcule quelle case c'est
+        int x_case = floor(x / grid_size);
+        int z_case = floor(z / grid_size);
+        
+        // Si c pair alors case blanche, sinon case noire
+        bool is_white = (x_case + z_case) % 2 == 0;
+        
+        if (is_white) {
+            return Color(0.8f, 0.8f, 0.8f); // Case blanche
+        } else {
+            return Color(0.2f, 0.2f, 0.2f); // Case noire
+        }
+    }
+
+    return background_color;
 }
 
 Color Scene::calculate_phong_lighting(const Vector3& hit_point, const Vector3& normal, 

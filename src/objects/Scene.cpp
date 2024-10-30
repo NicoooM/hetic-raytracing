@@ -3,6 +3,7 @@
 
 Scene::Scene(int width, int height, const Camera& camera)
     : width(width), height(height), camera(camera), background_color(0,0,0) {
+
     // Modifions la position du plan pour qu'il soit plus visible
     Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0)); // Position plus basse et normale vers le haut
     plans.push_back(default_plan);
@@ -18,11 +19,6 @@ void Scene::add_light(const Light& light) {
 
 Image Scene::render() const {
     Image image(width, height, background_color);
-
-    // Ray ray = camera.generate_ray(960, 540, width, height);
-    // Vector3 origin = ray.get_origin();
-    // std::cout << "origin: " << origin.get_x() << " " << origin.get_y() << " " << origin.get_z() << std::endl;
-    // ray.hit_sphere(objects[0]);
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {

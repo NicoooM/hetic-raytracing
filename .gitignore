@@ -1,4 +1,8 @@
+# Build
 out/
+*.png
+
+# IDE
 /.vscode
 
 # Prerequisites

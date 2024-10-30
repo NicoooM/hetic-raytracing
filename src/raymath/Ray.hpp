@@ -2,7 +2,6 @@
 
 #include "Vector3.hpp"
 #include "../objects/Sphere.hpp"
-#include "../objects/Rectangle.hpp"
 #include "../objects/Plan.hpp"
 #include "../shaders/hit.hpp"
 #include <iostream>
@@ -22,10 +21,8 @@ public:
     Vector3 get_direction() const;
 
     bool is_intersecting(Sphere sphere) const;
-    bool is_intersecting(Rectangle rectangle) const;
     bool is_intersecting(Plan plan) const;
     Hit hit_sphere(Sphere sphere) const;
-    Hit hit_rectangle(Rectangle rectangle) const;
     Hit hit_plan(Plan plan) const;
     Ray &operator=(Ray const &ray);
     friend std::ostream &operator<<(std::ostream &_stream, Ray const &ray);

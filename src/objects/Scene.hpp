@@ -1,8 +1,10 @@
 #pragma once
+
 #include <vector>
+
+#include "../rayimage/Image.hpp"
 #include "Sphere.hpp"
 #include "Plan.hpp"
-#include "../rayimage/Image.hpp"
 #include "Color.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
@@ -20,13 +22,11 @@ private:
 public:
     Scene(int width, int height, const Camera& camera);
     void add_object(const Sphere& object);
-    void add_object(const Plan& object);
     void add_light(const Light& light);
-    void set_background_color(const Color& color);
     Image render() const;
 
 private:
     Color calculate_pixel_color(const Ray& ray, const Vector3& pixel_position) const;
-    Color calculate_phong_lighting(const Vector3& hit_point, const Vector3& normal, 
-                               const Vector3& view_dir, const Color& base_color) const;
+    Color calculate_phong_lighting( const Vector3& hit_point, const Vector3& normal, 
+                                    const Vector3& view_dir, const Color& base_color ) const;
 };

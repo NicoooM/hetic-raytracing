@@ -12,16 +12,8 @@ void Scene::add_object(const Sphere& object) {
     objects.push_back(object);
 }
 
-void Scene::add_object(const Plan& object) {
-    plans.push_back(object);
-}
-
 void Scene::add_light(const Light& light) {
     lights.push_back(light);
-}
-
-void Scene::set_background_color(const Color& color) {
-    background_color = color;
 }
 
 Image Scene::render() const {

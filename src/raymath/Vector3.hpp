@@ -20,14 +20,13 @@ public:
 
     Vector3 normalize() const;
     float dot_product(Vector3 const &vec) const;
-    Vector3 projection(Vector3 const &vec) const;
     float pythagorean() const;
-    // Vector3 Reflect(Vector3 const &normal) const;
 
     Vector3 operator*(float const &val) const;
     Vector3 operator+(Vector3 const &vec) const;
     Vector3 operator-(Vector3 const &vec) const;
     Vector3 &operator=(Vector3 const &vec);
-
+    
+    friend Vector3 operator*(float scalar, const Vector3& vec);
     friend std::ostream &operator<<(std::ostream &stream, Vector3 const &vec);
 };

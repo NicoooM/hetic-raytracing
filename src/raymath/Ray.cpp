@@ -59,7 +59,7 @@ Hit Ray::hit_sphere(Sphere sphere) const {
         
     float a = sqrt(sphere.get_r() * sphere.get_r() - distance * distance);
   
-    Vector3 coordinate_of_intersection =  projection + (ray_normalized_direction * a);
+    Vector3 coordinate_of_intersection =  projection + (a * (ray_normalized_direction * -1));
     Vector3 normal = (coordinate_of_intersection - sphere.get_center()).normalize();
     return Hit(distance, coordinate_of_intersection, normal);
 }

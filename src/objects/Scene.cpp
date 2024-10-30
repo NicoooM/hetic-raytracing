@@ -3,8 +3,8 @@
 
 Scene::Scene(int width, int height, const Camera& camera)
     : width(width), height(height), camera(camera), background_color(0,0,0) {
-    // Ajout d'un plan par défaut
-    Plan default_plan(Vector3(0, 1, 0), Vector3(0, 500, 0)); // Position et normale du plan
+    // Add default plan
+    Plan default_plan(Vector3(0, 1, 0), Vector3(0, 500, 0)); // Location and normal of plan
     plans.push_back(default_plan);
 }
 
@@ -24,7 +24,7 @@ void Scene::set_background_color(const Color& color) {
     background_color = color;
 }
 
-Image Scene::render(ShadingType shading_type) const {
+Image Scene::render() const {
     Image image(width, height, background_color);
 
     // Ray ray = camera.generate_ray(960, 540, width, height);
@@ -35,7 +35,7 @@ Image Scene::render(ShadingType shading_type) const {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             Ray ray = camera.generate_ray(x, y, width, height);
-            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), shading_type);
+            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0));
             image.set_pixel(x, y, pixel_color);
         }
     }
@@ -43,26 +43,14 @@ Image Scene::render(ShadingType shading_type) const {
     return image;
 }
 
-Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position, ShadingType shading_type) const {
+Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position) const {
     for (const auto& sphere : objects) {
         Hit hit = ray.hit_sphere(sphere);
         if (hit.HasCollision()) {
             Vector3 hit_point = hit.Point();
             Vector3 normal = hit.Normal();
             Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
-            
-            // Create color based on normal vector components
-            // Map normal components from [-1,1] to [0,1] range
-            // float r = (normal.get_x() + 1.0f) * 0.5f;
-            // float g = (normal.get_y() + 1.0f) * 0.5f; 
-            // float b = (normal.get_z() + 1.0f) * 0.5f;
-            // return Color(r, g, b);
-            
-            if (shading_type == PHONG) {
-                return calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
-            } else if (shading_type == COOK_TORRANCE) {
-                // return calculate_cook_torrance(hit_point, normal, view_dir, sphere.get_color());
-            }
+            return calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
         }
     }
     
@@ -73,11 +61,7 @@ Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_position
             Vector3 normal = hit.Normal();
             Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
             
-            if (shading_type == PHONG) {
-                return calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Couleur jaune
-            } else if (shading_type == COOK_TORRANCE) {
-                // return calculate_cook_torrance(hit_point, normal, view_dir, Color(0.0, 1.0, 0.0));
-            }
+            return calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Yellow color
         }
     }
     
@@ -107,12 +91,6 @@ Color Scene::calculate_phong_lighting(const Vector3& hit_point, const Vector3& n
 
     total_diffuse /= lights.size();
     total_specular /= lights.size();
-
-        // std::cout << "Ambient: " << ambient_coefficient * ambient << std::endl;
-        // std::cout << "Diffuse: " << diffuse_coefficient * total_diffuse << std::endl;
-        // std::cout << "Specular: " << specular_coefficient * total_specular << std::endl;
-        // std::cout << "Base color: R=" << base_color.R() << " G=" << base_color.G() << " B=" << base_color.B() << std::endl;
-        // std::cout << "Total: " << ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular << std::endl;
 
     return Color(
         std::min(1.0f, base_color.R() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)),

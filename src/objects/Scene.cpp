@@ -1,5 +1,5 @@
 #include "Scene.hpp"
-#include "../shaders/hit.hpp"
+#include "../shaders/Hit.hpp"
 
 Scene::Scene(int width, int height, const Camera& camera)
     : width(width), height(height), camera(camera), background_color(0,0,0) {

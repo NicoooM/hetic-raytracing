@@ -26,7 +26,6 @@ public:
     Vector3 operator+(Vector3 const &vec) const;
     Vector3 operator-(Vector3 const &vec) const;
     Vector3 &operator=(Vector3 const &vec);
-    
     friend Vector3 operator*(float scalar, const Vector3& vec);
     friend std::ostream &operator<<(std::ostream &stream, Vector3 const &vec);
 };

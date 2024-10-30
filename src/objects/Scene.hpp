@@ -1,17 +1,15 @@
 #pragma once
 
 #include <vector>
-
-#include "../rayimage/Image.hpp"
 #include "Sphere.hpp"
 #include "Plan.hpp"
 #include "Color.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
+#include "../rayimage/Image.hpp"
 
 class Scene
 {
-
 private:
     std::vector<Sphere> objects;
     std::vector<Plan> plans;
@@ -27,7 +25,7 @@ private:
 
 public:
     Scene(int width, int height, const Camera& camera);
-    
+
     void add_object(const Sphere& object);
     void add_light(const Light& light);
     Image render() const;

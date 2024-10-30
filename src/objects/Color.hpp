@@ -4,7 +4,6 @@
 
 class Color
 {
-
 public:
   float r = 0;
   float b = 0;
@@ -30,7 +29,5 @@ public:
     b /= scalar;
     return *this;
   }
-
   friend std::ostream &operator<<(std::ostream &_stream, Color const &col);
-  
 };

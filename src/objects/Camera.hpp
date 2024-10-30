@@ -5,7 +5,6 @@
 
 class Camera
 {
-
 private:
     Vector3 origin;
     float focal_length;
@@ -15,5 +14,4 @@ public:
 
     Ray generate_ray(float u, float v, int width, int height) const;
     Vector3 get_origin() const;
-
 };

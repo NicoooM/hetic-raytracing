@@ -25,22 +25,23 @@ Vector3 Ray::get_direction() const
     return direction;
 }
 
-// TODO: Maybe remove this function because we do the same thing in hit_sphere
 bool Ray::is_intersecting(Sphere sphere) const
 {
     Vector3 raySphereVec = sphere.get_center() - origin;
+
     Vector3 rayNormalizedDirection = direction.normalize();
     float dotProduct = raySphereVec.dot_product(rayNormalizedDirection);
-
-    if (dotProduct < 0)
-        return false;
 
     Vector3 projection = rayNormalizedDirection * dotProduct;
     projection = origin + projection;
     Vector3 translation = projection - sphere.get_center();
     float distance = translation.pythagorean();
 
-    return distance <= sphere.get_r();
+    if (distance > sphere.get_r()) {
+        return false;
+    }
+
+    return true;
 }
 
 Hit Ray::hit_sphere(Sphere sphere) const {
@@ -57,7 +58,8 @@ Hit Ray::hit_sphere(Sphere sphere) const {
         return Hit::NoHit();
         
     float a = sqrt(sphere.get_r() * sphere.get_r() - distance * distance);
-    Vector3 coordinate_of_intersection =  projection + (ray_normalized_direction * a);
+  
+    Vector3 coordinate_of_intersection =  projection + (a * (ray_normalized_direction * -1));
     Vector3 normal = (coordinate_of_intersection - sphere.get_center()).normalize();
     return Hit(distance, coordinate_of_intersection, normal);
 }

@@ -29,10 +29,10 @@ bool Ray::is_intersecting(Sphere sphere) const
 {
     Vector3 raySphereVec = sphere.get_center() - origin;
 
-    Vector3 rayNormalizedDirection = direction.normalize();
-    float dotProduct = raySphereVec.dot_product(rayNormalizedDirection);
+    Vector3 ray_normalized_direction = direction.normalize();
+    float dot_product = raySphereVec.dot_product(ray_normalized_direction);
 
-    Vector3 projection = rayNormalizedDirection * dotProduct;
+    Vector3 projection = ray_normalized_direction * dot_product;
     projection = origin + projection;
     Vector3 translation = projection - sphere.get_center();
     float distance = translation.pythagorean();
@@ -57,11 +57,12 @@ Hit Ray::hit_sphere(Sphere sphere) const
     float distance = center_to_projection.pythagorean();
 
     if (distance > sphere.get_r())
-        return Hit::NoHit();
+        return Hit::no_hit();
 
     float a = sqrt(sphere.get_r() * sphere.get_r() - distance * distance);
 
     Vector3 coordinate_of_intersection = projection + (a * (ray_normalized_direction * -1));
+
     Vector3 normal = (coordinate_of_intersection - sphere.get_center()).normalize();
     return Hit(distance, coordinate_of_intersection, normal);
 }
@@ -75,19 +76,19 @@ Ray Ray::reflect(const Vector3 &origin, const Vector3 &normal) const
 
 Hit Ray::hit_plan(Plan plan) const
 {
-    Vector3 normal = plan.getNormal();
-    Vector3 point_on_plan = plan.getPoint();
+    Vector3 normal = plan.get_normal();
+    Vector3 point_on_plan = plan.get_point();
 
     float denom = normal.dot_product(direction);
     if (fabs(denom) < 1e-6)
     {
-        return Hit::NoHit(); // Le rayon est parallèle au plan
+        return Hit::no_hit(); // Le rayon est parallèle au plan
     }
 
     float t = (point_on_plan - origin).dot_product(normal) / denom;
     if (t < 0)
     {
-        return Hit::NoHit(); // Le plan est derrière le rayon
+        return Hit::no_hit(); // Le plan est derrière le rayon
     }
 
     Vector3 hit_point = origin + direction * t;

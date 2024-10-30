@@ -23,11 +23,6 @@ Image Scene::render() const
 {
     Image image(width, height, background_color);
 
-    // Ray ray = camera.generate_ray(960, 540, width, height);
-    // Vector3 origin = ray.get_origin();
-    // std::cout << "origin: " << origin.get_x() << " " << origin.get_y() << " " << origin.get_z() << std::endl;
-    // ray.hit_sphere(objects[0]);
-
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -54,26 +49,26 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
     bool is_sphere = false;
     Color color;
 
-    // Check intersections with planes
+    // Check if the ray intersects with the plans
     for (const Plan &plan : plans)
     {
         Hit hit = ray.hit_plan(plan);
-        if (hit.HasCollision() && hit.Distance() < closest_distance)
+        if (hit.has_collision() && hit.get_distance() < closest_distance)
         {
-            closest_distance = hit.Distance();
+            closest_distance = hit.get_distance();
             closest_hit = hit;
             is_plan = true;
             is_sphere = false;
         }
     }
 
-    // Check intersections with spheres
+    // Check if the ray intersects with the sphere
     for (const Sphere &sphere : objects)
     {
         Hit hit = ray.hit_sphere(sphere);
-        if (hit.HasCollision() && hit.Distance() < closest_distance)
+        if (hit.has_collision() && hit.get_distance() < closest_distance)
         {
-            closest_distance = hit.Distance();
+            closest_distance = hit.get_distance();
             closest_hit = hit;
             is_sphere = true;
             is_plan = false;
@@ -84,8 +79,8 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
     // Handle sphere intersection with reflection
     if (is_sphere)
     {
-        Vector3 hit_point = closest_hit.Point();
-        Vector3 normal = closest_hit.Normal();
+        Vector3 hit_point = closest_hit.get_point();
+        Vector3 normal = closest_hit.get_normal();
         Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
 
         Color base_color = calculate_phong_lighting(hit_point, normal, view_dir, color);
@@ -104,7 +99,7 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
     // Handle plane intersection with checkerboard pattern
     else if (is_plan)
     {
-        Vector3 hit_point = closest_hit.Point();
+        Vector3 hit_point = closest_hit.get_point();
 
         // Checkerboard pattern
         float grid_size = 5.0f;

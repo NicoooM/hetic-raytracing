@@ -42,7 +42,8 @@ float Vector3::dot_product(Vector3 const &vec) const
 
 float Vector3::pythagorean() const
 {
-    return sqrt(x * x + y * y + z * z);
+    float result = sqrt(x * x + y * y + z * z);
+    return result;
 }
 
 Vector3 Vector3::operator+(Vector3 const &vec) const

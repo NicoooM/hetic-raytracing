@@ -9,11 +9,11 @@
 int main() 
 {
   // Setup scene
-  Camera camera(Vector3(0, 0, 0), 100);
+  Camera camera(Vector3(0, 0, 0), 45);
   Scene scene(1920, 1080, camera);
 
   // Add objects
-  Sphere sphere1(Vector3(0, 0.0, 6), 1, Color(1.0, 0.0, 0.0));
+  Sphere sphere1(Vector3(0.0, 0.0, 6.0), 1, Color(1.0, 0.0, 0.0));
 
   scene.add_object(sphere1);
 

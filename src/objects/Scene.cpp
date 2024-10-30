@@ -3,8 +3,8 @@
 
 Scene::Scene(int width, int height, const Camera& camera)
     : width(width), height(height), camera(camera), background_color(0,0,0) {
-    // Ajout d'un plan par défaut
-    Plan default_plan(Vector3(0, 1, 0), Vector3(0, 500, 0)); // Position et normale du plan
+    // Add default plan
+    Plan default_plan(Vector3(0, 1, 0), Vector3(0, 500, 0)); // Plane and normal position
     plans.push_back(default_plan);
 }
 
@@ -26,11 +26,6 @@ void Scene::set_background_color(const Color& color) {
 
 Image Scene::render(ShadingType shading_type) const {
     Image image(width, height, background_color);
-
-    // Ray ray = camera.generate_ray(960, 540, width, height);
-    // Vector3 origin = ray.get_origin();
-    // std::cout << "origin: " << origin.get_x() << " " << origin.get_y() << " " << origin.get_z() << std::endl;
-    // ray.hit_sphere(objects[0]);
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {

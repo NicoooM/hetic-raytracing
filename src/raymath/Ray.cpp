@@ -60,6 +60,7 @@ Hit Ray::hit_sphere(Sphere sphere) const {
     float a = sqrt(sphere.get_r() * sphere.get_r() - distance * distance);
   
     Vector3 coordinate_of_intersection =  projection + (a * (ray_normalized_direction * -1));
+
     Vector3 normal = (coordinate_of_intersection - sphere.get_center()).normalize();
     return Hit(distance, coordinate_of_intersection, normal);
 }
@@ -70,12 +71,12 @@ Hit Ray::hit_plan(Plan plan) const {
 
     float denom = normal.dot_product(direction);
     if (fabs(denom) < 1e-6) {
-        return Hit::NoHit(); // Le rayon est parallèle au plan
+        return Hit::NoHit(); // The ray is parallel to the plan 
     }
 
     float t = (point_on_plan - origin).dot_product(normal) / denom;
     if (t < 0) {
-        return Hit::NoHit(); // Le plan est derrière le rayon
+        return Hit::NoHit(); // The plan is behind the ray
     }
 
     Vector3 hit_point = origin + direction * t;

@@ -4,8 +4,8 @@
 Scene::Scene(int width, int height, const Camera &camera)
     : width(width), height(height), camera(camera), background_color(0, 0, 0)
 {
-    // Ajout d'un plan par défaut
-    Plan default_plan(Vector3(0, 1, 0), Vector3(0, 500, 0)); // Position et normale du plan
+    // Modifions la position du plan pour qu'il soit plus visible
+    Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0)); // Position plus basse et normale vers le haut
     plans.push_back(default_plan);
 }
 
@@ -14,22 +14,12 @@ void Scene::add_object(const Sphere &object)
     objects.push_back(object);
 }
 
-void Scene::add_object(const Plan &object)
-{
-    plans.push_back(object);
-}
-
 void Scene::add_light(const Light &light)
 {
     lights.push_back(light);
 }
 
-void Scene::set_background_color(const Color &color)
-{
-    background_color = color;
-}
-
-Image Scene::render(ShadingType shading_type) const
+Image Scene::render() const
 {
     Image image(width, height, background_color);
 
@@ -43,7 +33,7 @@ Image Scene::render(ShadingType shading_type) const
         for (int x = 0; x < width; x++)
         {
             Ray ray = camera.generate_ray(x, y, width, height);
-            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), shading_type, 3);
+            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), 3);
             image.set_pixel(x, y, pixel_color);
         }
     }
@@ -51,76 +41,85 @@ Image Scene::render(ShadingType shading_type) const
     return image;
 }
 
-Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_position, ShadingType shading_type, int depth) const
+Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int depth) const
 {
     if (depth == 0)
-        return Color(0, 0, 0);
+        return background_color;
 
     Color final_color(0, 0, 0);
-    float min_distance = std::numeric_limits<float>::max();
-    bool has_hit = false;
 
-    // Plane intersection check
-    for (const auto &plan : plans)
+    float closest_distance = std::numeric_limits<float>::infinity();
+    Hit closest_hit;
+    bool is_plan = false;
+    bool is_sphere = false;
+    Color color;
+
+    // Check intersections with planes
+    for (const Plan &plan : plans)
     {
         Hit hit = ray.hit_plan(plan);
-        if (hit.HasCollision() && hit.Distance() < min_distance)
+        if (hit.HasCollision() && hit.Distance() < closest_distance)
         {
-            min_distance = hit.Distance();
-            Vector3 hit_point = hit.Point();
-            Vector3 normal = hit.Normal();
-            Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
-            has_hit = true;
-
-            if (shading_type == PHONG)
-            {
-                final_color = calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Yellow
-            }
-            else if (shading_type == COOK_TORRANCE)
-            {
-                // final_color = calculate_cook_torrance(hit_point, normal, view_dir, Color(0.0, 1.0, 0.0));
-            }
+            closest_distance = hit.Distance();
+            closest_hit = hit;
+            is_plan = true;
+            is_sphere = false;
         }
     }
 
-    // Sphere intersection check with reflection
-    for (const auto &sphere : objects)
+    // Check intersections with spheres
+    for (const Sphere &sphere : objects)
     {
         Hit hit = ray.hit_sphere(sphere);
-        if (hit.HasCollision() && hit.Distance() < min_distance)
+        if (hit.HasCollision() && hit.Distance() < closest_distance)
         {
-            min_distance = hit.Distance();
-            Vector3 hit_point = hit.Point();
-            Vector3 normal = hit.Normal();
-            Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
-            has_hit = true;
-
-            Color base_color;
-            if (shading_type == PHONG)
-            {
-                base_color = calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
-            }
-            else if (shading_type == COOK_TORRANCE)
-            {
-                // base_color = calculate_cook_torrance(hit_point, normal, view_dir, sphere.get_color());
-            }
-
-            float reflection_strength = 0.5f;
-            if (reflection_strength > 0)
-            {
-                Ray reflected_ray = ray.reflect(hit_point, normal);
-                Color reflected_color = calculate_pixel_color(reflected_ray, hit_point, shading_type, depth - 1);
-                base_color = base_color * (1.0f - reflection_strength) + reflected_color * reflection_strength;
-            }
-
-            final_color = base_color;
+            closest_distance = hit.Distance();
+            closest_hit = hit;
+            is_sphere = true;
+            is_plan = false;
+            color = sphere.get_color();
         }
     }
 
-    // Background gradient if no hits
-    if (!has_hit)
+    // Handle sphere intersection with reflection
+    if (is_sphere)
     {
-        float gradient = static_cast<float>(pixel_position.get_y()) / height;
+        Vector3 hit_point = closest_hit.Point();
+        Vector3 normal = closest_hit.Normal();
+        Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+
+        Color base_color = calculate_phong_lighting(hit_point, normal, view_dir, color);
+
+        // Reflection calculation
+        float reflection_strength = 0.5f;
+        if (reflection_strength > 0)
+        {
+            Ray reflected_ray = ray.reflect(hit_point, normal);
+            Color reflected_color = calculate_pixel_color(reflected_ray, hit_point, depth - 1);
+            base_color = base_color * (1.0f - reflection_strength) + reflected_color * reflection_strength;
+        }
+
+        final_color = base_color; // Store the combined color with reflection
+    }
+    // Handle plane intersection with checkerboard pattern
+    else if (is_plan)
+    {
+        Vector3 hit_point = closest_hit.Point();
+
+        // Checkerboard pattern
+        float grid_size = 5.0f;
+        float x = hit_point.get_x();
+        float z = hit_point.get_z();
+        int x_case = static_cast<int>(floor(x / grid_size));
+        int z_case = static_cast<int>(floor(z / grid_size));
+
+        bool is_white = (x_case + z_case) % 2 == 0;
+        final_color = is_white ? Color(0.8f, 0.8f, 0.8f) : Color(0.2f, 0.2f, 0.2f);
+    }
+    else
+    {
+        // Background gradient if no objects hit
+        float gradient = static_cast<float>(pixel_pos.get_y()) / height;
         return Color(0, 0, gradient);
     }
 
@@ -151,12 +150,6 @@ Color Scene::calculate_phong_lighting(const Vector3 &hit_point, const Vector3 &n
 
     total_diffuse /= lights.size();
     total_specular /= lights.size();
-
-    // std::cout << "Ambient: " << ambient_coefficient * ambient << std::endl;
-    // std::cout << "Diffuse: " << diffuse_coefficient * total_diffuse << std::endl;
-    // std::cout << "Specular: " << specular_coefficient * total_specular << std::endl;
-    // std::cout << "Base color: R=" << base_color.R() << " G=" << base_color.G() << " B=" << base_color.B() << std::endl;
-    // std::cout << "Total: " << ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular << std::endl;
 
     return Color(
         std::min(1.0f, base_color.R() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)),

@@ -55,12 +55,18 @@ Vector3 Vector3::operator-(Vector3 const &vec) const
     return Vector3(x - vec.x, y - vec.y, z - vec.z);
 }
 
+
 Vector3 &Vector3::operator=(Vector3 const &vec)
 {
     x = vec.x;
     y = vec.y;
     z = vec.z;
     return *this;
+}
+
+Vector3 operator*(float scalar, const Vector3& vec)
+{
+    return vec * scalar;
 }
 
 Vector3 Vector3::operator*(float const &val) const

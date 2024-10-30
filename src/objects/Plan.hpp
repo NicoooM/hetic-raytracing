@@ -12,8 +12,8 @@ public:
     Plan(const Vector3& point, const Vector3& normal);
     ~Plan();
 
-    const Vector3& getPoint() const;
-    const Vector3& getNormal() const;
-    void setPoint(const Vector3& point);
-    void setNormal(const Vector3& normal);
+    const Vector3& get_point() const;
+    const Vector3& get_normal() const;
+    void set_point(const Vector3& point);
+    void set_normal(const Vector3& normal);
 };

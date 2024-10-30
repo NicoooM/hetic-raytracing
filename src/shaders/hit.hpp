@@ -4,29 +4,29 @@
 
 class Hit {
 private:
-    bool hasHit;    // Boolen pour dire si collision ou pas 
-    float distance; // Distance jusqu'au point d'intersection
-    Vector3 point;  // Point d'intersection
-    Vector3 normal; // Normale à la surface au point d'intersection
+    bool has_hit;   // Boolean to say if there is a collision or not 
+    float distance; // Distance to the intersection point
+    Vector3 point;  // Intersection point
+    Vector3 normal; // Normal to the surface at the intersection point
 
 public:
-    Hit() : hasHit(false), distance(0), point(Vector3()), normal(Vector3()) {}
+    Hit() : has_hit(false), distance(0), point(Vector3()), normal(Vector3()) {}
+    
     Hit(float d, Vector3 p, Vector3 n) : 
-        hasHit(true), 
+        has_hit(true), 
         distance(d), 
         point(p), 
         normal(n) {}
 
     ~Hit() = default;
 
-    // Accesseurs
-    bool HasCollision() const { return hasHit; }
-    float Distance() const { return distance; }
-    Vector3 Point() const { return point; }
-    Vector3 Normal() const { return normal; }
+    bool has_collision() const { return has_hit; }
+    float get_distance() const { return distance; }
+    Vector3 get_point() const { return point; }
+    Vector3 get_normal() const { return normal; }
 
-    // Méthode statique pour le cas ou ya un Hit sans collision
-    static Hit NoHit() {
+    // Static method for the case where there is no collision
+    static Hit no_hit() {
         return Hit();
     }
 };

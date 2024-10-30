@@ -4,15 +4,16 @@
 
 class Color
 {
-private:
+public:
   float r = 0;
   float b = 0;
   float g = 0;
 
-public:
   Color();
   Color(float r, float g, float b);
-  ~Color();
+
+  Color& operator+=(const Color& other);
+  Color operator/(float scalar) const;
 
   float R() const;
   float G() const;

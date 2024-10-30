@@ -19,11 +19,18 @@ void Scene::add_light(const Light& light) {
 
 Image Scene::render() const {
     Image image(width, height, background_color);
+    int samples_per_pixel = 4; // Nombre d'échantillons par pixel pour l'antialiasing
 
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            Ray ray = camera.generate_ray(x, y, width, height);
-            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0));
+            Color pixel_color(0, 0, 0);
+            for (int s = 0; s < samples_per_pixel; s++) {
+                float u = (x + static_cast<float>(rand()) / RAND_MAX) / width;
+                float v = (y + static_cast<float>(rand()) / RAND_MAX) / height;
+                Ray ray = camera.generate_ray(u, v, width, height);
+                pixel_color += calculate_pixel_color(ray, Vector3(x, y, 0));
+            }
+            pixel_color /= samples_per_pixel;
             image.set_pixel(x, y, pixel_color);
         }
     }

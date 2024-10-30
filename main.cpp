@@ -1,9 +1,11 @@
-#include "Color.hpp"
-#include "Image.hpp"
+#include <iostream>
+#include <vector>
 #include "Sphere.hpp"
-#include "Ray.hpp"
-#include "Vector3.hpp"
 #include "Scene.hpp"
+#include "Camera.hpp"
+#include "Ray.hpp"
+#include "Color.hpp"
+
 
 int main()
 {
@@ -25,11 +27,12 @@ int main()
   Light light(Vector3(1.2, 2, 0), Color(1.0, 1.0, 1.0), 1.5);
   scene.add_light(light);
 
+    // Ajout d'un rectangle pour le sol
+    // Rectangle rectangle(Vector3(0, 0, 1), Color(0.0, 1.0, 0.0), 100.0, 100.0);
+    // scene.add_object(rectangle);
+    // Rendu de la scène
+    Image renderedImage = scene.render();
+    renderedImage.write_file("ball.png");
 
-
-  // Render and save
-  Image renderedImage = scene.render();
-  renderedImage.write_file("ball.png");
-
-  return 0;
+    return 0;
 }

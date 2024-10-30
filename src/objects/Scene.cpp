@@ -38,11 +38,8 @@ Image Scene::render() const
 
 Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int depth) const
 {
-    if (depth == 0)
-        return background_color;
 
     Color final_color(0, 0, 0);
-
     float closest_distance = std::numeric_limits<float>::infinity();
     Hit closest_hit;
     bool is_plan = false;
@@ -76,32 +73,25 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
         }
     }
 
-    // Handle sphere intersection with reflection
+    if (!is_sphere && !is_plan)
+    {
+        float gradient = static_cast<float>(pixel_pos.get_y()) / height;
+        return Color(0, 0, gradient);
+    }
+
+    // Calculate the base color of the hit point
     if (is_sphere)
     {
         Vector3 hit_point = closest_hit.get_point();
         Vector3 normal = closest_hit.get_normal();
         Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
 
-        Color base_color = calculate_phong_lighting(hit_point, normal, view_dir, color);
-
-        // Reflection calculation
-        float reflection_strength = 0.5f;
-        if (reflection_strength > 0)
-        {
-            Ray reflected_ray = ray.reflect(hit_point, normal);
-            Color reflected_color = calculate_pixel_color(reflected_ray, hit_point, depth - 1);
-            base_color = base_color * (1.0f - reflection_strength) + reflected_color * reflection_strength;
-        }
-
-        final_color = base_color; // Store the combined color with reflection
+        final_color = calculate_phong_lighting(hit_point, normal, view_dir, color);
     }
-    // Handle plane intersection with checkerboard pattern
     else if (is_plan)
     {
         Vector3 hit_point = closest_hit.get_point();
 
-        // Checkerboard pattern
         float grid_size = 5.0f;
         float x = hit_point.get_x();
         float z = hit_point.get_z();
@@ -111,11 +101,25 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
         bool is_white = (x_case + z_case) % 2 == 0;
         final_color = is_white ? Color(0.8f, 0.8f, 0.8f) : Color(0.2f, 0.2f, 0.2f);
     }
-    else
+
+    if (depth <= 0)
     {
-        // Background gradient if no objects hit
-        float gradient = static_cast<float>(pixel_pos.get_y()) / height;
-        return Color(0, 0, gradient);
+        return final_color;
+    }
+
+    if ((is_sphere || is_plan) && depth > 0)
+    {
+        float reflMulti = is_sphere ? 0.5f : 0.1f;
+        Vector3 hit_point = closest_hit.get_point();
+        Vector3 normal = closest_hit.get_normal();
+
+        // Calculate reflected ray
+        Ray reflected_ray = ray.reflect(hit_point, normal);
+        reflected_ray.get_origin() = hit_point + normal * 0.001f;
+
+        Color reflected_color = calculate_pixel_color(reflected_ray, hit_point, depth - 1);
+
+        final_color = final_color * (1.0f - reflMulti) + reflected_color * reflMulti;
     }
 
     return final_color;

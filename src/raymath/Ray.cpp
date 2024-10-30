@@ -47,31 +47,39 @@ bool Ray::is_intersecting(Sphere sphere) const
 
 Hit Ray::hit_sphere(Sphere sphere) const
 {
-    Vector3 distance_between_ray_origin_and_sphere_center = sphere.get_center() - origin;
-    Vector3 ray_normalized_direction = direction.normalize();
-    float dot_product = distance_between_ray_origin_and_sphere_center.dot_product(ray_normalized_direction);
+    Vector3 origin_to_center_vec = origin - sphere.get_center();
 
-    Vector3 projection = ray_normalized_direction * dot_product;
-    projection = origin + projection;
-    Vector3 center_to_projection = projection - sphere.get_center();
-    float distance = center_to_projection.pythagorean();
+    float quadratic_a = direction.dot_product(direction);
+    float quadratic_b = 2.0f * origin_to_center_vec.dot_product(direction);
+    float quadratic_c = origin_to_center_vec.dot_product(origin_to_center_vec) - sphere.get_r() * sphere.get_r();
 
-    if (distance > sphere.get_r())
+    float intersection_discriminant = quadratic_b * quadratic_b - 4 * quadratic_a * quadratic_c;
+
+    if (intersection_discriminant < 0)
         return Hit::no_hit();
 
-    float a = sqrt(sphere.get_r() * sphere.get_r() - distance * distance);
+    float nearest_intersection_dist = (-quadratic_b - sqrt(intersection_discriminant)) / (2.0f * quadratic_a);
 
-    Vector3 coordinate_of_intersection = projection + (a * (ray_normalized_direction * -1));
+    if (nearest_intersection_dist < 0)
+    {
+        nearest_intersection_dist = (-quadratic_b + sqrt(intersection_discriminant)) / (2.0f * quadratic_a);
+        if (nearest_intersection_dist < 0)
+            return Hit::no_hit();
+    }
 
-    Vector3 normal = (coordinate_of_intersection - sphere.get_center()).normalize();
-    return Hit(distance, coordinate_of_intersection, normal);
+    Vector3 intersection_point = origin + direction * nearest_intersection_dist;
+
+    Vector3 surface_normal = (intersection_point - sphere.get_center()).normalize();
+
+    return Hit(nearest_intersection_dist, intersection_point, surface_normal);
 }
 
-Ray Ray::reflect(const Vector3 &origin, const Vector3 &normal) const
+Ray Ray::reflect(const Vector3 &hit_point, const Vector3 &normal) const
 {
+    float offset = 0.001f;
     Vector3 normalized_direction = direction.normalize();
     Vector3 reflected_direction = normalized_direction - 2 * normal.dot_product(normalized_direction) * normal;
-    return Ray(origin + reflected_direction * 0.001, reflected_direction); // Slight offset to avoid artifacts
+    return Ray(hit_point + normal * offset, reflected_direction);
 }
 
 Hit Ray::hit_plan(Plan plan) const

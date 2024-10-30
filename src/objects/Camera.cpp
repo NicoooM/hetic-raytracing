@@ -15,12 +15,10 @@ Ray Camera::generate_ray(float x, float y, int width, int height) const {
     auto pixel_screen_x = (2 * pixel_normalized_device_coordinate_x - 1) * aspect_ratio;
     auto pixel_screen_y = 1 - 2 * pixel_normalized_device_coordinate_y;
 
-
     float final_pixel_x = pixel_screen_x * scale;
     float final_pixel_y = pixel_screen_y * scale;
     float final_pixel_z = 1;
 
-    
     Vector3 pixel_position(
         final_pixel_x,
         final_pixel_y,

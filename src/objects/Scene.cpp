@@ -4,7 +4,7 @@
 Scene::Scene(int width, int height, const Camera& camera)
     : width(width), height(height), camera(camera), background_color(0,0,0) {
     // Modifions la position du plan pour qu'il soit plus visible
-    Plan default_plan(Vector3(0, 2, 0), Vector3(0, 1, 0)); // Position plus basse et normale vers le haut
+    Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0)); // Position plus basse et normale vers le haut
     plans.push_back(default_plan);
 }
 
@@ -71,14 +71,11 @@ Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_pos, Sha
         }
     }
 
-    // Si nous avons touché quelque chose
     if (is_sphere) {
-        // Retourner la couleur de la sphère
         Vector3 hit_point = closest_hit.Point();
         Vector3 normal = closest_hit.Normal();
         Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
         
-        // Trouver la sphère touchée
         for (const Sphere& sphere : objects) {
             if (ray.hit_sphere(sphere).HasCollision()) {
                 return calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
@@ -87,22 +84,22 @@ Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_pos, Sha
     } else if (is_plan) {
         Vector3 hit_point = closest_hit.Point();
         
-        // Créer un motif de grille
-        float grid_size = 1.0f;
+        // Créer la grille
+        float grid_size = 5.0f;
         float x = hit_point.get_x();
         float z = hit_point.get_z();
         
-        // Normaliser les coordonnées pour la grille
-        float x_grid = fmod(abs(x), grid_size);
-        float z_grid = fmod(abs(z), grid_size);
+        // Calcule quelle case c'est
+        int x_case = floor(x / grid_size);
+        int z_case = floor(z / grid_size);
         
-        // Créer l'effet de grille
-        bool is_line = x_grid < 0.1f || z_grid < 0.1f;
+        // Si c pair alors case blanche, sinon case noire
+        bool is_white = (x_case + z_case) % 2 == 0;
         
-        if (is_line) {
-            return Color(0.2f, 0.2f, 0.2f); // Lignes noires
+        if (is_white) {
+            return Color(0.8f, 0.8f, 0.8f); // Case blanche
         } else {
-            return Color(0.8f, 0.8f, 0.8f); // Cases blanches
+            return Color(0.2f, 0.2f, 0.2f); // Case noire
         }
     }
 

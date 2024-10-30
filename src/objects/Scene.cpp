@@ -12,19 +12,11 @@ void Scene::add_object(const Sphere& object) {
     objects.push_back(object);
 }
 
-void Scene::add_object(const Plan& object) {
-    plans.push_back(object);
-}
-
 void Scene::add_light(const Light& light) {
     lights.push_back(light);
 }
 
-void Scene::set_background_color(const Color& color) {
-    background_color = color;
-}
-
-Image Scene::render(ShadingType shading_type) const {
+Image Scene::render() const {
     Image image(width, height, background_color);
 
     // Ray ray = camera.generate_ray(960, 540, width, height);
@@ -35,7 +27,7 @@ Image Scene::render(ShadingType shading_type) const {
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             Ray ray = camera.generate_ray(x, y, width, height);
-            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), shading_type);
+            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0));
             image.set_pixel(x, y, pixel_color);
         }
     }
@@ -43,7 +35,7 @@ Image Scene::render(ShadingType shading_type) const {
     return image;
 }
 
-Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_pos, ShadingType shading_type) const {
+Color Scene::calculate_pixel_color(const Ray& ray, const Vector3& pixel_pos) const {
     float closest_distance = std::numeric_limits<float>::infinity();
     Hit closest_hit;
     bool is_plan = false;
@@ -128,12 +120,6 @@ Color Scene::calculate_phong_lighting(const Vector3& hit_point, const Vector3& n
 
     total_diffuse /= lights.size();
     total_specular /= lights.size();
-
-        // std::cout << "Ambient: " << ambient_coefficient * ambient << std::endl;
-        // std::cout << "Diffuse: " << diffuse_coefficient * total_diffuse << std::endl;
-        // std::cout << "Specular: " << specular_coefficient * total_specular << std::endl;
-        // std::cout << "Base color: R=" << base_color.R() << " G=" << base_color.G() << " B=" << base_color.B() << std::endl;
-        // std::cout << "Total: " << ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular << std::endl;
 
     return Color(
         std::min(1.0f, base_color.R() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)),

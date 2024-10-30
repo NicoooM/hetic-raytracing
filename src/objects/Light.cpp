@@ -1,6 +1,5 @@
 #include "Light.hpp"
 
-// TODO: Maybe rename direction to position
 Light::Light(const Vector3& direction, const Color& color, float intensity)
     : direction(direction.normalize()), color(color), intensity(intensity) {}
 

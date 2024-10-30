@@ -66,11 +66,10 @@ Hit Ray::hit_sphere(Sphere sphere) const
     return Hit(distance, coordinate_of_intersection, normal);
 }
 
-Ray Ray::reflect(const Vector3 origin, const Vector3 normal) const
+Ray Ray::reflect(const Vector3 &origin, const Vector3 &normal) const
 {
     Vector3 normalized_direction = direction.normalize();
-    Vector3 projection = normalized_direction * normal.dot_product(normalized_direction);
-    Vector3 reflected_direction = normalized_direction - projection * 2;
+    Vector3 reflected_direction = normalized_direction - 2 * normal.dot_product(normalized_direction) * normal;
     return Ray(origin + reflected_direction * 0.001, reflected_direction); // Slight offset to avoid artifacts
 }
 

@@ -53,65 +53,48 @@ Image Scene::render(ShadingType shading_type) const
 
 Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_position, ShadingType shading_type, int depth) const
 {
-    for (const auto &sphere : objects)
-    {
-        Hit hit = ray.hit_sphere(sphere);
-        if (hit.HasCollision())
-        {
-            Vector3 hit_point = hit.Point();
-            Vector3 normal = hit.Normal();
-            Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+    if (depth == 0)
+        return Color(0, 0, 0);
 
-            // Create color based on normal vector components
-            // Map normal components from [-1,1] to [0,1] range
-            // float r = (normal.get_x() + 1.0f) * 0.5f;
-            // float g = (normal.get_y() + 1.0f) * 0.5f;
-            // float b = (normal.get_z() + 1.0f) * 0.5f;
-            // return Color(r, g, b);
+    Color final_color(0, 0, 0);
+    float min_distance = std::numeric_limits<float>::max();
+    bool has_hit = false;
 
-            if (shading_type == PHONG)
-            {
-                return calculate_phong_lighting(hit_point, normal, view_dir, sphere.get_color());
-            }
-            else if (shading_type == COOK_TORRANCE)
-            {
-                // return calculate_cook_torrance(hit_point, normal, view_dir, sphere.get_color());
-            }
-        }
-    }
-
-    Color final_color(0, 0, 0); // initialize final color as black or background
-
+    // Plane intersection check
     for (const auto &plan : plans)
     {
         Hit hit = ray.hit_plan(plan);
-        if (hit.HasCollision())
+        if (hit.HasCollision() && hit.Distance() < min_distance)
         {
+            min_distance = hit.Distance();
             Vector3 hit_point = hit.Point();
             Vector3 normal = hit.Normal();
             Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+            has_hit = true;
 
             if (shading_type == PHONG)
             {
-                return calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Couleur jaune
+                final_color = calculate_phong_lighting(hit_point, normal, view_dir, Color(1.0, 1.0, 0.0)); // Yellow
             }
             else if (shading_type == COOK_TORRANCE)
             {
-                // return calculate_cook_torrance(hit_point, normal, view_dir, Color(0.0, 1.0, 0.0));
+                // final_color = calculate_cook_torrance(hit_point, normal, view_dir, Color(0.0, 1.0, 0.0));
             }
         }
     }
 
+    // Sphere intersection check with reflection
     for (const auto &sphere : objects)
     {
         Hit hit = ray.hit_sphere(sphere);
-        if (hit.HasCollision())
+        if (hit.HasCollision() && hit.Distance() < min_distance)
         {
+            min_distance = hit.Distance();
             Vector3 hit_point = hit.Point();
             Vector3 normal = hit.Normal();
             Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+            has_hit = true;
 
-            // Base color from lighting model (Phong or Cook-Torrance)
             Color base_color;
             if (shading_type == PHONG)
             {
@@ -122,7 +105,7 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_position
                 // base_color = calculate_cook_torrance(hit_point, normal, view_dir, sphere.get_color());
             }
 
-            float reflection_strength = 0.5; // Coefficient for reflective materials
+            float reflection_strength = 0.5f;
             if (reflection_strength > 0)
             {
                 Ray reflected_ray = ray.reflect(hit_point, normal);
@@ -131,18 +114,14 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_position
             }
 
             final_color = base_color;
-            break; // Assuming one hit per ray; if multiple, this may need adjustment
         }
     }
 
-    // float gradient = static_cast<float>(pixel_position.get_y()) / height;
-    // return Color(0, 0, gradient);
-
-    // If no objects are hit, return the background color (gradient)
-    if (final_color == Color(0, 0, 0))
+    // Background gradient if no hits
+    if (!has_hit)
     {
         float gradient = static_cast<float>(pixel_position.get_y()) / height;
-        return Color(0, 0, gradient); // background gradient
+        return Color(0, 0, gradient);
     }
 
     return final_color;

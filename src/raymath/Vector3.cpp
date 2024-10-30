@@ -40,10 +40,6 @@ float Vector3::dot_product(Vector3 const &vec) const
     return x * vec.x + y * vec.y + z * vec.z;
 }
 
-Vector3 Vector3::projection(Vector3 const &vec) const
-{
-}
-
 float Vector3::pythagorean() const
 {
     return sqrt(x * x + y * y + z * z);
@@ -77,14 +73,6 @@ Vector3 Vector3::operator*(float const &val) const
 {
     return Vector3(x * val, y * val, z * val);
 }
-
-// Vector3 Vector3::reflect(Vector3 const &normal) const
-// {
-//     Vector3 proj = this->projection(normal);
-//     proj = proj * -2;
-//     Vector3 reflect_dir = *this + proj;
-//     return ;
-// }
 
 std::ostream &operator<<(std::ostream &stream, Vector3 const &vec)
 {

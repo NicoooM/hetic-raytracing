@@ -5,7 +5,6 @@ set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(raytracing main.cpp)
-add_executable(raytracing_old main.old.cpp)
 
 target_include_directories(raytracing PUBLIC
                            "${PROJECT_BINARY_DIR}"

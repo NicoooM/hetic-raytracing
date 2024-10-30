@@ -8,19 +8,22 @@
 int main()
 {
   // Setup scene
-  Camera camera(Vector3(0, 0, 0));
-  Scene scene(512, 512, camera);
+  Camera camera(Vector3(0, 0, 0), 100);
+  Scene scene(1920, 1080, camera);
 
   // Add objects
-  Sphere sphere(Vector3(0, 0, 3), 2, Color(1.0, 0.0, 0.0));
-  scene.add_object(sphere);
+  Sphere sphere1(Vector3(0, 0.0, 6), 1, Color(1.0, 0.0, 0.0));
+  // Sphere sphere2(Vector3(-1.0, 0.0, 3.5), 0.5, Color(0.0, 1.0, 0.0));
+  // Sphere sphere3(Vector3(1.0, 0.0, 3.5), 0.5, Color(0.0, 0.0, 1.0));
+  // Sphere sphere4(Vector3(4.0, 0.0, 3), 0.5, Color(1.0, 1.0, 0.0));
 
-  // Add lights
-  // Light light1(Vector3(2, 1.5, -1), Color(1.0, 0.7, 0.4), 2);
-  Light light2(Vector3(-1.5, -0.5, -0.8), Color(0.4, 0.5, 1.0), 1.2);  
+  scene.add_object(sphere1);
+  // scene.add_object(sphere2);
+  // scene.add_object(sphere3);
+  // scene.add_object(sphere4);
 
-  // scene.add_light(light1);
-  scene.add_light(light2);
+  Light light(Vector3(1.2, 2, 0), Color(1.0, 1.0, 1.0), 1.5);
+  scene.add_light(light);
 
 
 

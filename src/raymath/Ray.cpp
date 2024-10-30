@@ -24,22 +24,23 @@ Vector3 Ray::get_direction() const
     return direction;
 }
 
-// TODO: Maybe remove this function because we do the same thing in hit_sphere
 bool Ray::is_intersecting(Sphere sphere) const
 {
     Vector3 raySphereVec = sphere.get_center() - origin;
+
     Vector3 rayNormalizedDirection = direction.normalize();
     float dotProduct = raySphereVec.dot_product(rayNormalizedDirection);
-
-    if (dotProduct < 0)
-        return false;
 
     Vector3 projection = rayNormalizedDirection * dotProduct;
     projection = origin + projection;
     Vector3 translation = projection - sphere.get_center();
     float distance = translation.pythagorean();
 
-    return distance <= sphere.get_r();
+    if (distance > sphere.get_r()) {
+        return false;
+    }
+
+    return true;
 }
 
 Vector3 Ray::hit_sphere(Sphere sphere) const
@@ -58,7 +59,16 @@ Vector3 Ray::hit_sphere(Sphere sphere) const
         
 
     float a = sqrt(sphere.get_r() * sphere.get_r() - distance * distance);
-    Vector3 coordinate_of_intersection =  projection + (ray_normalized_direction * a);
+
+    Vector3 coordinate_of_intersection = projection + (a * (ray_normalized_direction * -1.0f));
+ 
+    // if (origin.get_x() == 0 && origin.get_y() == 0 && origin.get_z() == 0) {
+    //     std::cout << "coordinate_of_intersection: " << coordinate_of_intersection.get_x() << " " << coordinate_of_intersection.get_y() << " " << coordinate_of_intersection.get_z() << std::endl;
+    //     std::cout << "Sphere: " << sphere.get_center().get_x() << " " << sphere.get_center().get_y() << " " << sphere.get_center().get_z() << std::endl;
+    //     std::cout << "Sphere Rayon: " << sphere.get_r() << std::endl;
+    //     std::cout << "Distance: " << distance << std::endl;
+    // }
+    
     return coordinate_of_intersection;
 }
 

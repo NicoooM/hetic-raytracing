@@ -2,8 +2,6 @@
 
 #include <vector>
 #include "Sphere.hpp"
-
-#include "../rayimage/Image.hpp"
 #include "Shape.hpp"
 #include "Plan.hpp"
 #include "Color.hpp"

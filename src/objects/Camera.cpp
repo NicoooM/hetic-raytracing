@@ -3,21 +3,13 @@
 Camera::Camera(const Vector3& origin, float focal_length)
     : origin(origin), focal_length(focal_length) {}
 
-Ray Camera::generate_ray(float u, float v, int width, int height) const {
+Ray Camera::generate_ray(float x, float y, int width, int height) const {
     float aspect_ratio = float(width) / float(height);
     float scale = tan(focal_length * 0.5 *  (M_PI / 180));
-
-    // Convert to NDC (Normalized Device Coordinates)
     
-    // TODO: to fix
-    // auto pixel_normalized_device_coordinate_x = (u + 0.5f) / width;
-    // auto pixel_normalized_device_coordinate_y = (v + 0.5f) / height;
-    auto pixel_normalized_device_coordinate_x = u;
-    auto pixel_normalized_device_coordinate_y = v;
- 
     // Convert to screen space (aspect ratio to aspect ratio) for X and (-1 to 1) for Y
-    auto pixel_screen_x = (2 * pixel_normalized_device_coordinate_x - 1) * aspect_ratio;
-    auto pixel_screen_y = 1 - 2 * pixel_normalized_device_coordinate_y;
+    auto pixel_screen_x = (2 * x - 1) * aspect_ratio;
+    auto pixel_screen_y = 1 - 2 * y;
 
     float final_pixel_x = pixel_screen_x * scale;
     float final_pixel_y = pixel_screen_y * scale;

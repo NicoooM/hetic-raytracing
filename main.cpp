@@ -6,6 +6,7 @@
 #include "Camera.hpp"
 #include "Ray.hpp"
 #include "Color.hpp"
+#include "Cube.hpp"
 
 int main()
 {
@@ -17,6 +18,9 @@ int main()
   Sphere sphere2(Vector3(-1.5, 0, 6), 1, Color(1.0, 0.0, 0.0));
   Sphere sphere3(Vector3(-1.2, 0, 8), 1, Color(0.0, 0.0, 1.0));
 
+  Cube* cube1 = new Cube(Vector3(0, 0, 8), 2, Color(0.0, 0.0, 1.0));
+
+  scene.add_object(cube1);
   scene.add_object(sphere1);
   scene.add_object(sphere2);
   scene.add_object(sphere3);
@@ -28,6 +32,10 @@ int main()
 
   Image renderedImage = scene.render();
   renderedImage.write_file("ball.png");
+
+  // Delete objects for performance
+  delete sphere1;
+  delete sphere2;
 
   return 0;
 }

@@ -138,8 +138,10 @@ Color Scene::calculate_phong_lighting(const Vector3 hit_point, const Vector3 &no
     float diffuse_coefficient = 0.6f;
     float specular_coefficient = 0.4f;
     float ambient = 0.2f;
-    float total_diffuse = 0.0f;
     float total_specular = 0.0f;
+    float total_diffuse_r = 0.0f;
+    float total_diffuse_g = 0.0f;
+    float total_diffuse_b = 0.0f;
 
     for (const auto &light : lights)
     {
@@ -149,15 +151,20 @@ Color Scene::calculate_phong_lighting(const Vector3 hit_point, const Vector3 &no
         float diffuse = std::max(0.0f, normal.dot_product(light_dir));
         float specular = std::pow(std::max(0.0f, view_dir.dot_product(reflect_dir)), 16.0f);
 
-        total_diffuse += diffuse * light.get_intensity();
+        total_diffuse_r += diffuse * light.get_intensity() * light.get_color().R();
+        total_diffuse_g += diffuse * light.get_intensity() * light.get_color().G();
+        total_diffuse_b += diffuse * light.get_intensity() * light.get_color().B();
         total_specular += specular * light.get_intensity();
     }
 
-    total_diffuse /= lights.size();
+    total_diffuse_r /= lights.size();
+    total_diffuse_g /= lights.size();
+    total_diffuse_b /= lights.size();
     total_specular /= lights.size();
 
-    return Color(
-        std::min(1.0f, base_color.R() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)),
-        std::min(1.0f, base_color.G() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)),
-        std::min(1.0f, base_color.B() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)));
+ return Color(
+        std::min(1.0f, base_color.R() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse_r + specular_coefficient * total_specular)),
+        std::min(1.0f, base_color.G() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse_g + specular_coefficient * total_specular)),
+        std::min(1.0f, base_color.B() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse_b + specular_coefficient * total_specular))
+    );
 }

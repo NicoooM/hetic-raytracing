@@ -6,6 +6,7 @@
 #include "Camera.hpp"
 #include "Ray.hpp"
 #include "Color.hpp"
+#include "Cube.hpp"
 
 int main()
 {
@@ -16,6 +17,9 @@ int main()
   Sphere* sphere1 = new Sphere(Vector3(1.5, 0, 6), 1, Color(0.0, 1.0, 0.0));
   Sphere* sphere2 = new Sphere(Vector3(-1.5, 0, 6), 1, Color(1.0, 0.0, 0.0));
 
+  Cube* cube1 = new Cube(Vector3(0, 0, 8), 2, Color(0.0, 0.0, 1.0));
+
+  scene.add_object(cube1);
   scene.add_object(sphere1);
   scene.add_object(sphere2);
 

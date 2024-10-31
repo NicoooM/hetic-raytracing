@@ -217,15 +217,6 @@ void Scene::render_chunk(Image &image, int start_y, int end_y) const
 {
     int antialiasing_samples_per_pixel = 10;
 
-    // for (int y = start_y; y < end_y; y++)
-    // {
-    //     for (int x = 0; x < width; x++)
-    //     {
-    //         Ray ray = camera.generate_ray(x, y, width, height);
-    //         Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), 3);
-    //         image.set_pixel(x, y, pixel_color);
-    //     }
-    // }
 
     for (int y = start_y; y < end_y; y++)
     {

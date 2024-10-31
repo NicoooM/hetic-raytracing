@@ -21,8 +21,10 @@ public:
     Vector3 get_direction() const;
 
     bool is_intersecting(Sphere sphere) const;
-    bool is_intersecting(Plan plan) const;
     Hit hit_sphere(Sphere sphere) const;
+    Ray reflect(const Vector3 &origin, const Vector3 &normal) const;
+
+    bool is_intersecting(Plan plan) const;
     Hit hit_plan(Plan plan) const;
     Ray &operator=(Ray const &ray);
     friend std::ostream &operator<<(std::ostream &_stream, Ray const &ray);

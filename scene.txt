@@ -1,0 +1,47 @@
+CAMERA
+position 0 0 0
+fov 45
+end
+
+RESOLUTION 1920 1080
+
+PLAN
+position 0 -10 0
+normal 0 1 0
+end
+
+LIGHT
+position 1.2 2.0 0.0
+color 1.0 1.0 1.0
+intensity 1.5
+end
+
+LIGHT
+position -1.5 -0.5 -0.8
+color 0.4 0.5 1.0
+intensity 5
+end
+
+SPHERE
+position 1.5 0 6
+radius 1.0
+color 0.0 1.0 0.0
+end
+
+SPHERE
+position -1.5 0 6
+radius 1.0
+color 1.0 0.0 0.0
+end
+
+CUBE
+position 0 0 8
+size 2.0
+color 0.0 0.0 1.0
+end
+
+CUBE
+position -2 2 8
+size 2.0
+color 0.0 1.0 1.0
+end

@@ -4,6 +4,16 @@ project(raytracing VERSION 0.1.0 LANGUAGES C CXX)
 set (CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Define project root path for resource loading
+add_definitions(-DPROJECT_ROOT_DIR="${CMAKE_SOURCE_DIR}")
+
+# Copy scene.txt to build directory
+configure_file(
+    ${CMAKE_SOURCE_DIR}/scene.txt
+    ${CMAKE_BINARY_DIR}/scene.txt
+    COPYONLY
+)
+
 add_executable(raytracing main.cpp)
 
 target_include_directories(raytracing PUBLIC

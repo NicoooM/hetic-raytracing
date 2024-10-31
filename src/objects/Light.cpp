@@ -1,10 +1,10 @@
 #include "Light.hpp"
 
-Light::Light(const Vector3& direction, const Color& color, float intensity)
-    : direction(direction.normalize()), color(color), intensity(intensity) {}
+Light::Light(const Vector3& position, const Color& color, float intensity)
+    : position(position), color(color), intensity(intensity) {}
 
-Vector3 Light::get_direction() const {
-    return direction;
+Vector3 Light::get_position() const {
+    return position;
 }
 
 Color Light::get_color() const {

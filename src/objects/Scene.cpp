@@ -3,9 +3,11 @@
 
 Scene::Scene(int width, int height, const Camera &camera)
     : width(width), height(height), camera(camera), background_color(0, 0, 0)
+{}
+
+void Scene::add_plan(const Plan &plan)
 {
-    Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0)); 
-    plans.push_back(default_plan);
+    plans.push_back(plan);
 }
 
 void Scene::add_object(Shape* object)

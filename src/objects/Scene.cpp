@@ -91,6 +91,9 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
     else if (is_plan)
     {
         Vector3 hit_point = closest_hit.get_point();
+        Vector3 normal = closest_hit.get_normal();
+        Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+
 
         float grid_size = 5.0f;
         float x = hit_point.get_x();
@@ -99,7 +102,9 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
         int z_case = static_cast<int>(floor(z / grid_size));
 
         bool is_white = (x_case + z_case) % 2 == 0;
-        final_color = is_white ? Color(0.8f, 0.8f, 0.8f) : Color(0.2f, 0.2f, 0.2f);
+        Color white(1.0f, 1.0f, 1.0f);
+        Color black(0.0f, 0.0f, 0.0f);
+        final_color = is_white ? calculate_phong_lighting(hit_point, normal, view_dir, white) : calculate_phong_lighting(hit_point, normal, view_dir, black);
     }
 
     if (depth <= 0)
@@ -125,7 +130,7 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
     return final_color;
 }
 
-Color Scene::calculate_phong_lighting(const Vector3 &hit_point, const Vector3 &normal,
+Color Scene::calculate_phong_lighting(const Vector3 hit_point, const Vector3 &normal,
                                       const Vector3 &view_dir, const Color &base_color) const
 {
     float ambient_coefficient = 0.2f;
@@ -137,7 +142,7 @@ Color Scene::calculate_phong_lighting(const Vector3 &hit_point, const Vector3 &n
 
     for (const auto &light : lights)
     {
-        Vector3 light_dir = light.get_direction();
+        Vector3 light_dir = (light.get_direction() - hit_point).normalize();
         Vector3 reflect_dir = (light_dir * -1 + normal * (2 * light_dir.dot_product(normal))).normalize();
 
         float diffuse = std::max(0.0f, normal.dot_product(light_dir));

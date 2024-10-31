@@ -145,7 +145,7 @@ Color Scene::calculate_phong_lighting(const Vector3 hit_point, const Vector3 &no
 
     for (const auto &light : lights)
     {
-        Vector3 light_dir = (light.get_direction() - hit_point).normalize();
+        Vector3 light_dir = (light.get_position() - hit_point).normalize();
         Vector3 reflect_dir = (light_dir * -1 + normal * (2 * light_dir.dot_product(normal))).normalize();
 
         float diffuse = std::max(0.0f, normal.dot_product(light_dir));

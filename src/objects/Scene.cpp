@@ -62,7 +62,6 @@ Image Scene::render() const
 
 Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int depth) const
 {
-
     Color final_color(0, 0, 0);
     float closest_distance = std::numeric_limits<float>::infinity();
     Hit closest_hit;
@@ -104,30 +103,52 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
     }
 
     // Calculate the base color of the hit point
-    if (is_sphere)
+    if (is_sphere || is_plan)
     {
         Vector3 hit_point = closest_hit.get_point();
         Vector3 normal = closest_hit.get_normal();
         Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
 
-        final_color = calculate_phong_lighting(hit_point, normal, view_dir, color);
-    }
-    else if (is_plan)
-    {
-        Vector3 hit_point = closest_hit.get_point();
-        Vector3 normal = closest_hit.get_normal();
-        Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
+        // Check for shadows
+        bool in_shadow = false;
+        for (const auto &light : lights)
+        {
+            Vector3 light_dir = (light.get_position() - hit_point).normalize();
+            Ray shadow_ray(hit_point + normal * 0.001f, light_dir);
 
-        float grid_size = 5.0f;
-        float x = hit_point.get_x();
-        float z = hit_point.get_z();
-        int x_case = static_cast<int>(floor(x / grid_size));
-        int z_case = static_cast<int>(floor(z / grid_size));
+            for (const Shape *shape : objects)
+            {
+                if (shape->intersect(shadow_ray).has_collision())
+                {
+                    in_shadow = true;
+                    break;
+                }
+            }
+            if (in_shadow) break;
+        }
 
-        bool is_white = (x_case + z_case) % 2 == 0;
-        Color white(1.0f, 1.0f, 1.0f);
-        Color black(0.0f, 0.0f, 0.0f);
-        final_color = is_white ? calculate_phong_lighting(hit_point, normal, view_dir, white) : calculate_phong_lighting(hit_point, normal, view_dir, black);
+        if (is_sphere)
+        {
+            final_color = calculate_phong_lighting(hit_point, normal, view_dir, color);
+        }
+        else if (is_plan)
+        {
+            float grid_size = 5.0f;
+            float x = hit_point.get_x();
+            float z = hit_point.get_z();
+            int x_case = static_cast<int>(floor(x / grid_size));
+            int z_case = static_cast<int>(floor(z / grid_size));
+
+            bool is_white = (x_case + z_case) % 2 == 0;
+            Color white(1.0f, 1.0f, 1.0f);
+            Color black(0.0f, 0.0f, 0.0f);
+            final_color = is_white ? calculate_phong_lighting(hit_point, normal, view_dir, white) : calculate_phong_lighting(hit_point, normal, view_dir, black);
+        }
+
+        if (in_shadow)
+        {
+            final_color = final_color * 0.5f; // Dim the color if in shadow
+        }
     }
 
     if (depth <= 0)

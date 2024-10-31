@@ -14,11 +14,11 @@ int main()
   Scene scene(1920, 1080, camera);
 
   // Add objects
-  Sphere sphere1(Vector3(1.5, 0, 6), 1, Color(0.0, 1.0, 0.0));
-  Sphere sphere2(Vector3(-1.5, 0, 6), 1, Color(1.0, 0.0, 0.0));
-  Sphere sphere3(Vector3(-1.2, 0, 8), 1, Color(0.0, 0.0, 1.0));
+  Sphere *sphere1 = new Sphere(Vector3(1.5, 0, 6), 1, Color(0.0, 1.0, 0.0));
+  Sphere *sphere2 = new Sphere(Vector3(-1.5, 0, 6), 1, Color(1.0, 0.0, 0.0));
+  Sphere *sphere3 = new Sphere(Vector3(-1.2, 0, 8), 1, Color(0.0, 0.0, 1.0));
 
-  Cube* cube1 = new Cube(Vector3(0, 0, 8), 2, Color(0.0, 0.0, 1.0));
+  Cube *cube1 = new Cube(Vector3(0, 0, 8), 2, Color(0.0, 0.0, 1.0));
 
   scene.add_object(cube1);
   scene.add_object(sphere1);

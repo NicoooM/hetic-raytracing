@@ -8,11 +8,14 @@
 Scene::Scene(int width, int height, const Camera &camera)
     : width(width), height(height), camera(camera), background_color(0, 0, 0)
 {
-    Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0)); 
-    plans.push_back(default_plan);
 }
 
-void Scene::add_object(Shape* object)
+void Scene::add_plan(const Plan &plan)
+{
+    plans.push_back(plan);
+}
+
+void Scene::add_object(Shape *object)
 {
     objects.push_back(object);
 }
@@ -80,7 +83,7 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
     }
 
     // Check if the ray intersects with the shapes
-    for (const Shape* shape : objects)
+    for (const Shape *shape : objects)
     {
         Hit hit = shape->intersect(ray);
         if (hit.has_collision() && hit.get_distance() < closest_distance)
@@ -113,7 +116,6 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
         Vector3 hit_point = closest_hit.get_point();
         Vector3 normal = closest_hit.get_normal();
         Vector3 view_dir = (camera.get_origin() - hit_point).normalize();
-
 
         float grid_size = 5.0f;
         float x = hit_point.get_x();
@@ -157,28 +159,34 @@ Color Scene::calculate_phong_lighting(const Vector3 hit_point, const Vector3 &no
     float diffuse_coefficient = 0.6f;
     float specular_coefficient = 0.4f;
     float ambient = 0.2f;
-    float total_diffuse = 0.0f;
     float total_specular = 0.0f;
+    float total_diffuse_r = 0.0f;
+    float total_diffuse_g = 0.0f;
+    float total_diffuse_b = 0.0f;
 
     for (const auto &light : lights)
     {
-        Vector3 light_dir = (light.get_direction() - hit_point).normalize();
+        Vector3 light_dir = (light.get_position() - hit_point).normalize();
         Vector3 reflect_dir = (light_dir * -1 + normal * (2 * light_dir.dot_product(normal))).normalize();
 
         float diffuse = std::max(0.0f, normal.dot_product(light_dir));
         float specular = std::pow(std::max(0.0f, view_dir.dot_product(reflect_dir)), 16.0f);
 
-        total_diffuse += diffuse * light.get_intensity();
+        total_diffuse_r += diffuse * light.get_intensity() * light.get_color().R();
+        total_diffuse_g += diffuse * light.get_intensity() * light.get_color().G();
+        total_diffuse_b += diffuse * light.get_intensity() * light.get_color().B();
         total_specular += specular * light.get_intensity();
     }
 
-    total_diffuse /= lights.size();
+    total_diffuse_r /= lights.size();
+    total_diffuse_g /= lights.size();
+    total_diffuse_b /= lights.size();
     total_specular /= lights.size();
 
     return Color(
-        std::min(1.0f, base_color.R() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)),
-        std::min(1.0f, base_color.G() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)),
-        std::min(1.0f, base_color.B() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)));
+        std::min(1.0f, base_color.R() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse_r + specular_coefficient * total_specular)),
+        std::min(1.0f, base_color.G() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse_g + specular_coefficient * total_specular)),
+        std::min(1.0f, base_color.B() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse_b + specular_coefficient * total_specular)));
 }
 
 void Scene::render_chunk(Image &image, int start_y, int end_y) const

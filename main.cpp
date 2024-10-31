@@ -13,8 +13,8 @@ int main()
   Scene scene(1920, 1080, camera);
 
   // Add objects
-  Sphere sphere1(Vector3(1.5, 0, 6), 1, Color(0.0, 1.0, 0.0));
-  Sphere sphere2(Vector3(-1.5, 0, 6), 1, Color(1.0, 0.0, 0.0));
+  Sphere* sphere1 = new Sphere(Vector3(1.5, 0, 6), 1, Color(0.0, 1.0, 0.0));
+  Sphere* sphere2 = new Sphere(Vector3(-1.5, 0, 6), 1, Color(1.0, 0.0, 0.0));
 
   scene.add_object(sphere1);
   scene.add_object(sphere2);
@@ -26,6 +26,10 @@ int main()
 
   Image renderedImage = scene.render();
   renderedImage.write_file("ball.png");
+
+  // Delete objects for performance
+  delete sphere1;
+  delete sphere2;
 
   return 0;
 }

@@ -28,6 +28,6 @@ public:
 
 private:
     Color calculate_pixel_color(const Ray &ray, const Vector3 &pixel_position, int depth) const;
-    Color calculate_phong_lighting(const Vector3 &hit_point, const Vector3 &normal,
+    Color calculate_phong_lighting(const Vector3 hit_point, const Vector3 &normal,
                                    const Vector3 &view_dir, const Color &base_color) const;
 };

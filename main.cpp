@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#include "Plan.hpp"
+
 #include "Sphere.hpp"
 #include "Scene.hpp"
 #include "Camera.hpp"
@@ -14,16 +14,18 @@ int main()
   Scene scene(1920, 1080, camera);
 
   // Add objects
-  Sphere* sphere1 = new Sphere(Vector3(1.5, 0, 6), 1, Color(0.0, 1.0, 0.0));
-  Sphere* sphere2 = new Sphere(Vector3(-1.5, 0, 6), 1, Color(1.0, 0.0, 0.0));
+  Sphere *sphere1 = new Sphere(Vector3(1.5, 0, 6), 1, Color(0.0, 1.0, 0.0));
+  Sphere *sphere2 = new Sphere(Vector3(-1.5, 0, 6), 1, Color(1.0, 0.0, 0.0));
+  Sphere *sphere3 = new Sphere(Vector3(-1.2, 0, 8), 1, Color(0.0, 0.0, 1.0));
 
-  Cube* cube1 = new Cube(Vector3(0, 0, 5), 2, Color(1.0, 0.0, 0.0));
+  Cube *cube1 = new Cube(Vector3(0, 0, 8), 2, Color(0.0, 0.0, 1.0));
 
   scene.add_object(cube1);
   scene.add_object(sphere1);
   scene.add_object(sphere2);
+  scene.add_object(sphere3);
 
-  Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0)); 
+  Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0));
   scene.add_plan(default_plan);
 
   Light light(Vector3(1.2, 2, 0), Color(1.0, 1.0, 1.0), 1.5);
@@ -37,6 +39,6 @@ int main()
   // Delete objects for performance
   delete sphere1;
   delete sphere2;
-  delete cube1;
+
   return 0;
 }

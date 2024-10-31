@@ -12,7 +12,7 @@
 class Scene
 {
 private:
-    std::vector<Shape*> objects;
+    std::vector<Shape *> objects;
     std::vector<Plan> plans;
     std::vector<Light> lights;
     Camera camera;
@@ -22,8 +22,9 @@ private:
 
 public:
     Scene(int width, int height, const Camera &camera);
-    void add_object(Shape* object);
+    void add_object(Shape *object);
     void add_light(const Light &light);
+    void render_chunk(Image &image, int start_y, int end_y) const;
     void add_plan(const Plan &plan);
     Image render() const;
 

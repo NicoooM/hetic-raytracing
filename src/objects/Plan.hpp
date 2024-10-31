@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "../raymath/Vector3.hpp"
 
 class Plan

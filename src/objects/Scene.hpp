@@ -1,13 +1,13 @@
 #pragma once
 
 #include <vector>
-
-#include "../rayimage/Image.hpp"
+#include "Sphere.hpp"
 #include "Shape.hpp"
 #include "Plan.hpp"
 #include "Color.hpp"
 #include "Camera.hpp"
 #include "Light.hpp"
+#include "../rayimage/Image.hpp"
 
 class Scene
 {
@@ -16,9 +16,9 @@ private:
     std::vector<Plan> plans;
     std::vector<Light> lights;
     Camera camera;
+    Color background_color;
     int width;
     int height;
-    Color background_color;
 
 public:
     Scene(int width, int height, const Camera &camera);

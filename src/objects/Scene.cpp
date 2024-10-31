@@ -30,6 +30,7 @@ Image Scene::render() const
     auto start_time = std::chrono::high_resolution_clock::now();
 
     Image image(width, height, background_color);
+    int antialiasing_samples_per_pixel = 10;
 
     const unsigned int thread_count = std::thread::hardware_concurrency();
     std::vector<std::thread> threads;
@@ -191,12 +192,31 @@ Color Scene::calculate_phong_lighting(const Vector3 hit_point, const Vector3 &no
 
 void Scene::render_chunk(Image &image, int start_y, int end_y) const
 {
+    int antialiasing_samples_per_pixel = 10;
+
+    // for (int y = start_y; y < end_y; y++)
+    // {
+    //     for (int x = 0; x < width; x++)
+    //     {
+    //         Ray ray = camera.generate_ray(x, y, width, height);
+    //         Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), 3);
+    //         image.set_pixel(x, y, pixel_color);
+    //     }
+    // }
+
     for (int y = start_y; y < end_y; y++)
     {
         for (int x = 0; x < width; x++)
         {
-            Ray ray = camera.generate_ray(x, y, width, height);
-            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), 3);
+            Color pixel_color(0, 0, 0);
+            for (int s = 0; s < antialiasing_samples_per_pixel; s++)
+            {
+                float u = (x + static_cast<float>(rand()) / RAND_MAX) / width;
+                float v = (y + static_cast<float>(rand()) / RAND_MAX) / height;
+                Ray ray = camera.generate_ray(u, v, width, height);
+                pixel_color += calculate_pixel_color(ray, Vector3(x, y, 0), 5);
+            }
+            pixel_color /= antialiasing_samples_per_pixel;
             image.set_pixel(x, y, pixel_color);
         }
     }

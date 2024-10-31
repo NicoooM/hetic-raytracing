@@ -25,6 +25,9 @@ int main()
   scene.add_object(sphere2);
   scene.add_object(sphere3);
 
+  Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0));
+  scene.add_plan(default_plan);
+
   Light light(Vector3(1.2, 2, 0), Color(1.0, 1.0, 1.0), 1.5);
   Light light2(Vector3(-1.5, -0.5, -0.8), Color(0.4, 0.5, 1.0), 1.2);
   scene.add_light(light);

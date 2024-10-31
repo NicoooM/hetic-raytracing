@@ -1,6 +1,7 @@
 #pragma once
-#include "../raymath/Vector3.hpp"
+
 #include "Color.hpp"
+#include "../raymath/Vector3.hpp"
 
 class Light {
 private:

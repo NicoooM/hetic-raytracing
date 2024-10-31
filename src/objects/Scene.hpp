@@ -24,6 +24,7 @@ public:
     Scene(int width, int height, const Camera &camera);
     void add_object(Shape* object);
     void add_light(const Light &light);
+    void add_plan(const Plan &plan);
     Image render() const;
 
 private:

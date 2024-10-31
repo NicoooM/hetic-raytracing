@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Sphere.hpp"
 #include "../raymath/Vector3.hpp"
+#include "../raymath/Ray.hpp"
 
 Sphere::Sphere() : center(Vector3()), r(0), color(Color())
 {
@@ -55,4 +56,8 @@ Sphere &Sphere::operator=(Sphere const &sphere)
 std::ostream &operator<<(std::ostream &_stream, Sphere const &sphere)
 {
     return _stream << "Sphere(" << sphere.center << "," << sphere.r << "," << sphere.color << ")";
+}
+
+Hit Sphere::intersect(const Ray& ray) const {
+    return ray.hit_sphere(*this);
 }

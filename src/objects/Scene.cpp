@@ -4,12 +4,11 @@
 Scene::Scene(int width, int height, const Camera &camera)
     : width(width), height(height), camera(camera), background_color(0, 0, 0)
 {
-    // Modifions la position du plan pour qu'il soit plus visible
-    Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0)); // Position plus basse et normale vers le haut
+    Plan default_plan(Vector3(0, -10, 0), Vector3(0, 1, 0)); 
     plans.push_back(default_plan);
 }
 
-void Scene::add_object(const Sphere &object)
+void Scene::add_object(Shape* object)
 {
     objects.push_back(object);
 }
@@ -59,17 +58,17 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
         }
     }
 
-    // Check if the ray intersects with the sphere
-    for (const Sphere &sphere : objects)
+    // Check if the ray intersects with the shapes
+    for (const Shape* shape : objects)
     {
-        Hit hit = ray.hit_sphere(sphere);
+        Hit hit = shape->intersect(ray);
         if (hit.has_collision() && hit.get_distance() < closest_distance)
         {
             closest_distance = hit.get_distance();
             closest_hit = hit;
             is_sphere = true;
             is_plan = false;
-            color = sphere.get_color();
+            color = shape->get_color();
         }
     }
 

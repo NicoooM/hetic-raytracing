@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "../rayimage/Image.hpp"
-#include "Sphere.hpp"
+#include "Shape.hpp"
 #include "Plan.hpp"
 #include "Color.hpp"
 #include "Camera.hpp"
@@ -12,7 +12,7 @@
 class Scene
 {
 private:
-    std::vector<Sphere> objects;
+    std::vector<Shape*> objects;
     std::vector<Plan> plans;
     std::vector<Light> lights;
     Camera camera;
@@ -22,7 +22,7 @@ private:
 
 public:
     Scene(int width, int height, const Camera &camera);
-    void add_object(const Sphere &object);
+    void add_object(Shape* object);
     void add_light(const Light &light);
     Image render() const;
 

@@ -15,9 +15,11 @@ int main()
   // Add objects
   Sphere sphere1(Vector3(1.5, 0, 6), 1, Color(0.0, 1.0, 0.0));
   Sphere sphere2(Vector3(-1.5, 0, 6), 1, Color(1.0, 0.0, 0.0));
+  Sphere sphere3(Vector3(-1.2, 0, 8), 1, Color(0.0, 0.0, 1.0));
 
   scene.add_object(sphere1);
   scene.add_object(sphere2);
+  scene.add_object(sphere3);
 
   Light light(Vector3(1.2, 2, 0), Color(1.0, 1.0, 1.0), 1.5);
   Light light2(Vector3(-1.5, -0.5, -0.8), Color(0.4, 0.5, 1.0), 1.2);

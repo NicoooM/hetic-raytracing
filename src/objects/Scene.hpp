@@ -24,6 +24,7 @@ public:
     Scene(int width, int height, const Camera &camera);
     void add_object(const Sphere &object);
     void add_light(const Light &light);
+    void render_chunk(Image &image, int start_y, int end_y) const;
     Image render() const;
 
 private:

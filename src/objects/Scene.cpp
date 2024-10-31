@@ -1,5 +1,9 @@
 #include "Scene.hpp"
 #include "../shaders/hit.hpp"
+#include <mutex>
+#include <atomic>
+#include <thread>
+#include <chrono>
 
 Scene::Scene(int width, int height, const Camera &camera)
     : width(width), height(height), camera(camera), background_color(0, 0, 0)
@@ -21,17 +25,34 @@ void Scene::add_light(const Light &light)
 
 Image Scene::render() const
 {
+    auto start_time = std::chrono::high_resolution_clock::now();
+
     Image image(width, height, background_color);
 
-    for (int y = 0; y < height; y++)
+    const unsigned int thread_count = std::thread::hardware_concurrency();
+    std::vector<std::thread> threads;
+
+    const int chunk_size = height / thread_count;
+
+    for (unsigned int i = 0; i < thread_count; i++)
     {
-        for (int x = 0; x < width; x++)
-        {
-            Ray ray = camera.generate_ray(x, y, width, height);
-            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), 3);
-            image.set_pixel(x, y, pixel_color);
-        }
+        int start_y = i * chunk_size;
+        int end_y = (i == thread_count - 1) ? height : (i + 1) * chunk_size;
+
+        threads.emplace_back([this, &image, start_y, end_y]()
+                             { render_chunk(image, start_y, end_y); });
     }
+
+    for (auto &thread : threads)
+    {
+        thread.join();
+    }
+
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time);
+
+    std::cout << "Multithreaded render completed in: "
+              << duration.count() << "ms" << std::endl;
 
     return image;
 }
@@ -154,4 +175,17 @@ Color Scene::calculate_phong_lighting(const Vector3 &hit_point, const Vector3 &n
         std::min(1.0f, base_color.R() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)),
         std::min(1.0f, base_color.G() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)),
         std::min(1.0f, base_color.B() * (ambient_coefficient * ambient + diffuse_coefficient * total_diffuse + specular_coefficient * total_specular)));
+}
+
+void Scene::render_chunk(Image &image, int start_y, int end_y) const
+{
+    for (int y = start_y; y < end_y; y++)
+    {
+        for (int x = 0; x < width; x++)
+        {
+            Ray ray = camera.generate_ray(x, y, width, height);
+            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), 3);
+            image.set_pixel(x, y, pixel_color);
+        }
+    }
 }

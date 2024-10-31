@@ -1,10 +1,10 @@
 #pragma once
 
+#include <iostream>
 #include "Vector3.hpp"
 #include "../objects/Sphere.hpp"
 #include "../objects/Plan.hpp"
 #include "../shaders/hit.hpp"
-#include <iostream>
 
 class Ray
 {

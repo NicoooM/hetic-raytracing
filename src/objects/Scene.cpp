@@ -23,13 +23,18 @@ void Scene::add_light(const Light &light)
 Image Scene::render() const
 {
     Image image(width, height, background_color);
+    int antialiasing_samples_per_pixel = 10; 
 
-    for (int y = 0; y < height; y++)
-    {
-        for (int x = 0; x < width; x++)
-        {
-            Ray ray = camera.generate_ray(x, y, width, height);
-            Color pixel_color = calculate_pixel_color(ray, Vector3(x, y, 0), 3);
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            Color pixel_color(0, 0, 0);
+            for (int s = 0; s < antialiasing_samples_per_pixel; s++) {
+                float u = (x + static_cast<float>(rand()) / RAND_MAX) / width;
+                float v = (y + static_cast<float>(rand()) / RAND_MAX) / height;
+                Ray ray = camera.generate_ray(u, v, width, height);
+                pixel_color += calculate_pixel_color(ray, Vector3(x, y, 0), 5);
+            }
+            pixel_color /= antialiasing_samples_per_pixel;
             image.set_pixel(x, y, pixel_color);
         }
     }

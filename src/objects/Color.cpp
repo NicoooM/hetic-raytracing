@@ -69,6 +69,17 @@ bool Color::operator==(Color const &col) const
   return r == col.r && g == col.g && b == col.b;
 }
 
+Color& Color::operator+=(const Color& other) {
+    r += other.r;
+    g += other.g;
+    b += other.b;
+    return *this;
+}
+
+Color Color::operator/(float scalar) const {
+    return Color(r / scalar, g / scalar, b / scalar);
+}
+
 /**
  * Here we implement the << operator :
  * We take each component and append it to he stream, giving it a nice form on the console

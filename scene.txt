@@ -6,42 +6,66 @@ end
 RESOLUTION 1920 1080
 
 PLAN
-position 0 -10 0
+position 0 -15 0
 normal 0 1 0
 end
 
 LIGHT
-position 1.2 2.0 0.0
-color 1.0 1.0 1.0
-intensity 1.5
-end
-
-LIGHT
-position -1.5 -0.5 -0.8
-color 0.4 0.5 1.0
-intensity 5
+position 3.0 4.0 1.5
+color 0.94 0.26 0.47
+intensity 2
 end
 
 SPHERE
-position 1.5 0 6
-radius 1.0
-color 0.0 1.0 0.0
+position 0 -2 8
+radius 1.2
+color 0.9 0.3 0.4
 end
 
 SPHERE
-position -1.5 0 6
-radius 1.0
-color 1.0 0.0 0.0
+position 2.5 -1 9
+radius 0.8
+color 0.2 0.8 0.5
+end
+
+SPHERE
+position -2.5 -1 9
+radius 0.8
+color 0.4 0.4 0.9
+end
+
+SPHERE
+position 1.5 0.5 10
+radius 0.7
+color 0.8 0.7 0.2
+end
+
+SPHERE
+position -1.5 0.5 10
+radius 0.7
+color 0.3 0.5 0.8
+end
+
+SPHERE
+position 0 2 11
+radius 0.6
+color 0.9 0.6 0.1
 end
 
 CUBE
-position 0 0 8
-size 2.0
-color 0.0 0.0 1.0
+position -3 -3 7
+size 1.5
+color 0.2 0.3 0.9
 end
 
 CUBE
-position -2 2 8
-size 2.0
-color 0.0 1.0 1.0
+position 3 -3 7
+size 1.5
+color 0.3 0.9 0.2
+end
+
+CUBE
+position 0 1 12
+size 1.2
+color 0.8 0.7 0.3
 end

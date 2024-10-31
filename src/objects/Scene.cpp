@@ -63,7 +63,7 @@ Image Scene::render() const
 Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int depth) const
 {
     Color final_color(0, 0, 0);
-    float closest_distance = std::numeric_limits<float>::infinity();
+    float closest_distance = 100;
     Hit closest_hit;
     bool is_plan = false;
     bool is_sphere = false;
@@ -98,8 +98,10 @@ Color Scene::calculate_pixel_color(const Ray &ray, const Vector3 &pixel_pos, int
 
     if (!is_sphere && !is_plan)
     {
-        float gradient = static_cast<float>(pixel_pos.get_y()) / height;
-        return Color(0, 0, gradient);
+        // bleu foncé
+
+        return Color(0.04f, 0.015f, 0.17f);
+        // return Color(0, 0, 0);
     }
 
     // Calculate the base color of the hit point
